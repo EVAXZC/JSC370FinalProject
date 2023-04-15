@@ -1,0 +1,189 @@
+---
+title: "JSC370 Final Project"
+author: "Zichun Xu"
+output: 
+    html_document:
+        toc: TRUE
+        toc_float: TRUE
+---
+
+This is my JSC370 Final Project website.
+
+```{r setup, message=FALSE, echo=FALSE}
+knitr::opts_chunk$set(
+  warning = FALSE,
+  message = FALSE,
+  eval = TRUE,
+  echo = FALSE,
+  cache = FALSE,
+  include = TRUE,
+  fig.width = 7, 
+  fig.align = 'center',
+  fig.asp = 0.618,
+  out.width = "700px")
+```
+
+```{r}
+library(data.table)
+library(tidyverse)
+library(plotly)
+library(knitr)
+library(widgetframe)
+# install.packages("httr")
+library(httr)
+library(data.table)
+library(leaflet)
+library(tidyverse)
+library(ggplot2)
+# install.packages("ggpubr")
+library(ggpubr)
+# install.packages("broom")
+library(broom)
+library(compareGroups)
+library(readxl)
+library(car)
+```
+
+
+
+```{r, eval=TRUE, include = FALSE}
+homicides <- read.csv("homicides.csv", header=TRUE)
+alcohol <- read.csv("WHOAlcoholTotalPerCapita.csv", header=TRUE)
+doctor <- read.csv("doctor.csv", header=TRUE)
+```
+
+```{r, eval=TRUE, include = FALSE}
+# tidy the data and keep only necessary data column
+
+homicides <- homicides[,!names(homicides) %in% c("IndicatorCode", "Indicator", "ValueType", "ParentLocationCode", "Location.type", "SpatialDimValueCode", "Period.type", "Dim2.type", "Dim2", "Dim2ValueCode", "Dim3.type", "Dim3", "Dim3ValueCode", "DataSourceDimValueCode", "DataSource", "FactValueNumericPrefix", "FactValueUoM", "FactValueNumericLowPrefix", "FactValueNumericHighPrefix", "FactValueTranslationID", "FactComments")]
+
+doctor <- doctor[,!names(doctor) %in% c("IndicatorCode", "Indicator", "ValueType", "ParentLocationCode", "Location.type", "SpatialDimValueCode", "Period.type", "Dim1.type", "Dim1", "Dim1ValueCode", "Dim2.type", "Dim2", "Dim2ValueCode", "Dim3.type", "Dim3", "Dim3ValueCode", "DataSourceDimValueCode", "DataSource", "FactValueNumericPrefix", "FactValueUoM", "FactValueNumericLowPrefix", "FactValueNumericLow",  "FactValueNumericHighPrefix", "FactValueNumericHigh", "FactValueTranslationID", "FactComments")]
+
+```
+
+```{r,  eval=TRUE, include = FALSE}
+head(doctor)
+```
+
+```{r, include = FALSE, eval=TRUE}
+head(homicides)
+```
+
+```{r, include = FALSE, eval=TRUE}
+table(homicides$Dim1.type)
+```
+
+```{r, eval=TRUE, include = FALSE}
+colnames(homicides)[colnames(homicides) == "Dim1"] = "Sex"
+colnames(homicides)[colnames(homicides) == "Dim1ValueCode"] = "SexCode"
+colnames(homicides)[colnames(homicides) == "FactValueNumeric"] = "AverageValue"
+colnames(homicides)[colnames(homicides) == "FactValueNumericLow"] = "LowFact"
+colnames(homicides)[colnames(homicides) == "FactValueNumericHigh"] = "HighFact"
+```
+
+```{r, eval=TRUE, include = FALSE}
+head(homicides)
+```
+
+```{r, eval=TRUE, include = FALSE}
+homicides <- homicides[,!names(homicides) %in% c("IsLatestYear", "Dim1.type", "SexCode", "Language", "DateModified")]
+head(homicides)
+```
+
+```{r, eval=TRUE, include = FALSE}
+Homicides <- homicides[!grepl('Both sexes', homicides$Sex),]
+head(Homicides)
+```
+
+```{r, eval=TRUE, include = FALSE}
+colnames(alcohol)[colnames(alcohol) == "Alcohol.total.per.capita..15...consumption.in.liters..numeric."] = "numeric"
+colnames(alcohol)[colnames(alcohol) == "Alcohol.total.per.capita..15...consumption.in.liters..low.estimation."] = "low_estimation_alcohol_per_capita"
+colnames(alcohol)[colnames(alcohol) == "Alcohol.total.per.capita..15...consumption.in.liters..high.estimation."] = "high_estimation_alcohol_per_capita"
+colnames(alcohol)[colnames(alcohol) == "Alcohol.total.per.capita..15...consumption.in.liters..string."] = "string_alcohol_per_capita"
+
+alcohol <- alcohol[!grepl('Both sexes', alcohol$Sex),]
+
+Alcohol <- alcohol[,!names(alcohol) %in% c("low_estimation_alcohol_per_capita", "high_estimation_alcohol_per_capita", "string_alcohol_per_capita")]
+
+Doctor <- doctor[,!names(doctor) %in% c("IsLatestYear", "Language", "DateModified", "Value")]
+
+Homicides <- Homicides[,!names(Homicides) %in% c("LowFact", "HighFact", "Value")]
+
+```
+
+
+
+```{r, eval=TRUE, include = FALSE}
+homicides
+```
+
+
+```{r, eval=TRUE, include = FALSE}
+# Merge these datasets by country name and year
+
+met1 <- merge(
+  x = Homicides,
+  y = Alcohol,
+  by.x = c("Location", "Period", "Sex", "ParentLocation"),
+  by.y = c("Country", "Year", "Sex", "WHO.Region"),
+  all.x = FALSE,
+  all.y = FALSE
+)
+
+
+met2 <- merge(
+  x = met1,
+  y = Doctor,
+  by.x = c("Location", "Period", "ParentLocation"),
+  by.y = c("Location", "Period", "ParentLocation"),
+  all.x = FALSE,
+  all.y = FALSE
+)
+head(met2)
+
+met3 <- merge(
+  x = Homicides,
+  y = Doctor,
+  by.x = c("Location", "Period", "ParentLocation"),
+  by.y = c("Location", "Period", "ParentLocation"),
+  all.x = FALSE,
+  all.y = FALSE
+)
+
+colnames(met2)[colnames(met2) == "numeric"] = "Alcohol_numeric"
+colnames(met2)[colnames(met2) == "AverageValue"] = "Homicides_value"
+
+```
+
+```{r, eval=TRUE, include = FALSE}
+ head(met2)
+```
+```{r, eval=TRUE, include = FALSE}
+homicides_2017 <- met2 %>% filter(Period == 2017)
+```
+
+```{r, eval=TRUE, include = FALSE}
+# `cases`
+p2_scatter <- homicides_2017 %>% 
+  plot_ly(
+  x = ~ Homicides_value,
+  y = ~ Alcohol_numeric,
+  color = ~ Location,
+  size = ~ Homicides_value,
+  type = "scatter",
+  sizes = c(5, 100),
+  marker = list(sizemode = "area", opacity = .8)
+ )%>%
+        layout(title = 'The relationship between Homicidesvalue and Alcohol rate \n')
+
+```
+
+
+
+
+# Preliminary Results
+```{r echo=FALSE}
+p2_scatter
+```
+
+The plot above demonstrates the relationship between the number of homicide cases with the number of alcohol consumption per capita in each country for the years 2017. From the plot, we can see that in all four years, the country with higher alcohol consumption level corresponds to a higher homicide case number estimate, and we can infer that the number of homicide cases is positively correlated with the number of alcohol consumption per capita of each year. 

@@ -29,136 +29,101 @@ library(tidyverse)
 library(plotly)
 library(knitr)
 library(widgetframe)
+# install.packages("httr")
+library(httr)
+library(data.table)
+library(leaflet)
+library(tidyverse)
+library(ggplot2)
+# install.packages("ggpubr")
+library(ggpubr)
+# install.packages("broom")
+library(broom)
+library(compareGroups)
+# install.packages("readxl")
+library(readxl)
+library(car)
+```
+
+# Introduction
+
+Social stability and security can have a significant impact on our daily living conditions and quality. Living in a stable and secure social environment can positively affect people's health and well-being both physically and mentally, it can contribute to a stable economic environment and also provide people a sense of connection and belonging to the society.
+
+The number of homicides is a key indicator of social stability and security, and can also provide insights for social cohesion, governance and strength of law enforcement. Understanding the number of homicides can help to identify trends and patterns, as well as the factors correlated with the number of homicides can inform individual decisions, research and various political decisions related to law enforcement, public health, and social services.
+
+The number of homicides is also a key indicator of violence present in a certain area. Reducing the number of homicides will reduce violence, and it is a key objective of the United Nations' Sustainable Development Goal (SDG) 16: Peace, Justice and Strong Institutions. In order to achieve this goal, understanding the root causes of violence actions such as healthcare resources, social inequalities and designing specific strategies to eliminate them is very important. Understanding the root causes behind the number of homicides makes a big step towards achieving SDG 16.
+
+The World Health Organization (WHO) is an international public health agency of the United Nations, whose main objective is to promote health and well-being for all countries around the world. The WHO focuses on various health issues and factors that affect individual's well-being around the world. The number of homicides is an important indicator considered by the WHO in its Global Health Observatory. In this project, we will use the estimates of rates of homicides per 100,000 population dataset provided by the WHO. WHO defines homicide to be the killing of a person by another person with the intention of causing death or serious injuries, and reckless or negligent cases are excluded in the dataset. The dataset is an estimate of the number of homicides per 100,000 population for different countries around the globe drawn from data provided from police of different countries, as well as data from the United Nations Office on Drugs and Crime (UNODC) and WHO's mortality database. It also provides estimates of the number of homicides for male and female and contains information from 2000 to 2019.
+
+In the report, we aim to answer the following two questions: “Is there a correlation between the number of homicide cases and the number of medical doctors in each country, and is there a correlation between the number of homicide cases and the number of medical doctors together with alcohol consumption level in each country?”
+
+To do this, we will collect the number of medical doctors in each country through WHO's Global Health Workforce statistics database which extracts the national reporting in the National Health Workforce Accounts (NHWA) data platform, combining with various other sources such as National Census and Labour Force Surveys. This dataset contains information up to the year of 2000, and we will compare this information together with WHO's alcohol consumption situation for each country and region dataset (provided for HW2) to the rate of homicide per 100,000 population provided by the WHO, to determine if there is a statistically significant relationship.
+
+
+
+```{r, eval=TRUE, include = FALSE}
+homicides <- read.csv("homicides.csv", header=TRUE)
+alcohol <- read.csv("WHOAlcoholTotalPerCapita.csv", header=TRUE)
+doctor <- read.csv("doctor.csv", header=TRUE)
 ```
 
 
-```{r}
-cv_states_readin <- 
-  data.table::fread("https://raw.githubusercontent.com/nytimes/covid-19-data/master/us-states.csv")
-
-
-state_pops <- data.table::fread("https://raw.githubusercontent.com/COVID19Tracking/associated-data/master/us_census_data/us_census_2018_population_estimates_states.csv")
-
-state_pops$abb <- state_pops$state
-state_pops$state <- state_pops$state_name
-state_pops$state_name <- NULL
-
-cv_states <- merge(cv_states_readin, state_pops, by="state")
+```{r, eval=TRUE, include = FALSE}
+colnames(homicides)[colnames(homicides) == "FactValueNumeric"] = "Homicides_Rate"
 ```
 
-```{r}
-cv_states$date <- as.Date(cv_states$date, format="%Y-%m-%d")
-
-
-state_list <- unique(cv_states$state)
-cv_states$state <- factor(cv_states$state, levels = state_list)
-abb_list <- unique(cv_states$abb)
-cv_states$abb <- factor(cv_states$abb, levels = abb_list)
-
-
-cv_states = cv_states[order(cv_states$state, cv_states$date),]
-```
-
-  
-```{r}
-cv_states <- cv_states |>
-  mutate(
-    new_cases = c(-999999, diff(cases)),
-    new_deaths = c(-999999, diff(deaths))
-  ) |>
-  mutate(
-    new_cases = ifelse(new_cases == -999999, cases, new_cases),
-    new_deaths = ifelse(new_deaths == -999999, deaths, new_deaths)
-  )
-```
-  
-
-
-```{r}
-cv_states <- cv_states |>
-  dplyr::filter(date >= "2022-10-01")
-```
-
-
-
-
-```{r}
-cv_states <- cv_states |>
-  mutate(
-    new_cases = ifelse(new_cases > 0, new_cases, 0),
-    new_deaths = ifelse(new_deaths > 0, new_deaths, 0)
-  )
+```{r, eval=TRUE, include = FALSE}
+homicides_2019 <- homicides %>% filter(Period == 2019)
 ```
 
 
 
-```{r}
-cv_states <- cv_states |>
-  mutate(
-    per100k = round(cases / population * 1e5, digits = 1),
-    newper100k = round(new_cases / population * 1e5, digits = 1),
-    deathsper100k = round(deaths / population * 1e5, digits = 1),
-    newdeathsper100k = round(new_deaths / population * 1e5, digits = 1),
-  )
-```
-
-```{r}
-cv_states <- cv_states |>
-  mutate(
-    naive_cfr = deaths / cases
-  )
-```
-
-```{r}
-max_date <- max(cv_states$date)
-cv_states_today <- cv_states |>
-  dplyr::filter(date == max_date)
-
+```{r, eval=TRUE, include = FALSE}
+breaks <- c(0, 1, 5, 10, 15, 20, 30, 50, 140)
+colors <- colorRampPalette(RColorBrewer::brewer.pal(9, "RdBu"))(length(breaks))
 ```
 
 
-```{r}
-# `per100k`
-p1_scatter <- cv_states_today %>% 
-  plot_ly(
-  x = ~ log(pop_density),
-  y = ~ per100k,
-  color = ~ state,
-  size = ~ population,
-  type = "scatter",
-  sizes = c(5, 100),
-  marker = list(sizemode = "area", opacity = .8)
-  )
-```
-
-```{r}
-# `cases`
-p2_scatter <- cv_states_today %>% 
-  plot_ly(
-  x = ~ log(pop_density),
-  y = ~ cases,
-  color = ~ state,
-  size = ~ population,
-  type = "scatter",
-  sizes = c(5, 100),
-  marker = list(sizemode = "area", opacity = .8)
- )
-```
-
-
-## Showcasing plots {.tabset}
-
-### Figure 1
 
 ```{r echo=FALSE}
-p1_scatter
+homicides_2019 %>% 
+  plot_geo(type='choropleth', locations=homicides_2019$Location, locationmode = "country names", z=homicides_2019$Homicides_Rate, text=paste0("Homicides rate(per 100,000 population) \n", homicides_2019$Location), autocolorscale=FALSE, color = ~Homicides_Rate, colors = colors) %>%
+        colorbar(title='Homicides_Rate \n(per 100,000 population)')%>%
+  layout(title = 'Homicides_Rate (per 100,000 population) in 2019')
+
 ```
 
-### Figure 2
+
+#### This is World the homicides rate per 100,000 population from 2000 to 2019
 
 ```{r echo=FALSE}
-p2_scatter
+f1 <- list(
+  family = "Times New Roman",
+  size = 14,
+  color = "black")
+cv_states_mat <- homicides |>
+  filter(Dim1 == "Both sexes") |>
+  select(Location, Period, Homicides_Rate) |>
+  pivot_wider(names_from = Location, values_from = Homicides_Rate)|>
+  column_to_rownames("Period")
+plot_ly(
+  x = colnames(cv_states_mat),
+  y = rownames(cv_states_mat),
+  z = ~ as.matrix(cv_states_mat),
+  type = "heatmap",
+  showscale = TRUE
+)%>%
+  colorbar(title='Homicides_Rate \n(per 100,000 population)',titlefont = f1,
+                                                tickfont = f1)%>%
+  layout(title = 'Homicides_Rate (per 100,000 population) from 2000 to 2019',titlefont = f1,
+                                                tickfont = f1)
 ```
+
+# Methods
+
+The first steps for this statistical report is to collect data that we would like to analyze and draw conclusions, then explore and clean the data collected to make sure that it fits our requirements for further analysis.
+
+
 
 
 
