@@ -7,7 +7,7 @@ navbar:
       href: index.html
       icon: fa-home
     - text: "Data"
-      href: DATAcollection.html
+      href: Datacollection.html
       icon: fa-twitter
     - text: "Result"
       href: Result.html
