@@ -285,7 +285,7 @@ After the data is cleaned and merged together, we can start to explore the data 
 
 The first histogram shows the frequency distribution of the estimate of rate of homicides (per 100,000 population) by different categories of sexes over all countries in every year from 2000 to 2019. 
 
-```{r echo=FALSE, eval=TRUE, message=FALSE}
+```{r, echo=FALSE, message=FALSE}
 library(gganimate)
 Homicides_mf<- met_40 %>% 
   ggplot(aes(x = Homicides_value))+
@@ -312,7 +312,7 @@ This animated histogram shows the homicides value in different countries in each
 
 The second histogram shows the frequency of the total alcohol assumption in liters per captia by different sexes over all countries in each year from 2000 to 2019.
 
-```{r echo=FALSE, eval=TRUE, message=FALSE}
+```{r, echo=FALSE, message=FALSE}
 library(gganimate)
 Alcohol_mf <- met_40 %>% 
   ggplot(aes(x = Alcohol_numeric))+
@@ -341,7 +341,7 @@ From the above animated histogram, the estimate of alcohol consumption of female
 The third histogram show the Medical doctors (per 10000 population) over all countries in each year from 2000 to 2019.
 
 
-```{r echo=FALSE, eval=TRUE, message=FALSE}
+```{r, echo=FALSE, message=FALSE}
 library(gganimate)
 doctor_mf <- met_40 %>% 
   ggplot(aes(x = doctor_num))+
