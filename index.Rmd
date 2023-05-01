@@ -1,0 +1,79 @@
+---
+title: "JSC370 Final Project"
+author: "Zichun Xu"
+date: "2023-04-25"
+output: 
+    html_document
+---
+<br />
+
+# The Reason Behind Homicide
+
+
+```{r setup, message=FALSE, echo=FALSE}
+knitr::opts_chunk$set(
+  warning = FALSE,
+  message = FALSE,
+  eval = TRUE,
+  echo = FALSE,
+  cache = FALSE,
+  include = TRUE,
+  fig.width = 7, 
+  fig.align = 'center',
+  fig.asp = 0.618,
+  out.width = "700px")
+```
+
+```{r}
+library(data.table)
+library(tidyverse)
+library(plotly)
+library(knitr)
+library(widgetframe)
+# install.packages("httr")
+library(httr)
+library(data.table)
+library(leaflet)
+library(tidyverse)
+library(ggplot2)
+# install.packages("ggpubr")
+library(ggpubr)
+# install.packages("broom")
+library(broom)
+library(compareGroups)
+# install.packages("readxl")
+library(readxl)
+library(car)
+```
+
+## Introduction
+Social stability and security can have a significant impact on our daily living conditions and quality. Living in a stable and secure social environment can positively affect people's health and well-being both physically and mentally, it can contribute to a stable economic environment and also provide people a sense of connection and belonging to the society.
+
+The rate of homicides is a key indicator of social stability and security, and can also provide insights for social cohesion, governance and strength of law enforcement. Understanding the number of homicides can help to identify trends and patterns, as well as the factors correlated with the number of homicides can inform individual decisions, research and various political decisions related to law enforcement, public health, and social services.
+
+The rate of homicides is also a key indicator of violence present in a certain area. Reducing the rate of homicides will reduce violence, and it is a key objective of the United Nations' Sustainable Development Goal (SDG) 16: Peace, Justice and Strong Institutions. In order to achieve this goal, understanding the root causes of violence actions such as healthcare resources, social inequalities and designing specific strategies to eliminate them is very important. Understanding the root causes behind the number of homicides makes a big step towards achieving SDG 16.
+
+The World Health Organization (WHO) is an international public health agency of the United Nations, whose main objective is to promote health and well-being for all countries around the world. The WHO focuses on various health issues and factors that affect individual's well-being around the world. The rate of homicides is an important indicator considered by the WHO in its Global Health Observatory. In this project, we will use the estimates of rates of homicides per 100,000 population dataset provided by the WHO. WHO defines homicide to be the killing of a person by another person with the intention of causing death or serious injuries, and reckless or negligent cases are excluded in the dataset. The dataset is an estimate of the number of homicides per 100,000 population for different countries around the globe drawn from data provided from police of different countries, as well as data from the United Nations Office on Drugs and Crime (UNODC) and WHO's mortality database. It also provides estimates of the rate of homicides for male and female and contains information from 2000 to 2019.
+
+In the report, we aim to answer the following two questions: “Is there a correlation between the number of homicide cases and the number of medical doctors in each country, and is there a correlation between the number of homicide cases and the number of medical doctors together with alcohol consumption level in each country?”
+
+To do this, we will collect the number of medical doctors in each country through WHO's Global Health Workforce statistics database which extracts the national reporting in the National Health Workforce Accounts (NHWA) data platform, combining with various other sources such as National Census and Labour Force Surveys. This dataset contains information up to the year of 2000, and we will compare this information together with WHO's alcohol consumption situation for each country and region dataset (provided for HW2) to the rate of homicide per 100,000 population provided by the WHO, to determine if there is a statistically significant relationship.
+
+<br />
+
+## Link to PDF Version of Actual Report
+
+[click here](https://github.com/EVAXZC/JSC370FinalProject/blob/master/Final.pdf)to download the report PDF.
+
+<br />
+
+<br />
+
+
+
+
+
+
+
+
+

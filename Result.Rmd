@@ -1,0 +1,26 @@
+---
+title: "JSC370 Final Project"
+author: "Zichun Xu"
+output: 
+    html_document:
+        toc: TRUE
+        toc_float: TRUE
+---
+
+
+# Conclusions
+
+In this report, our primary guiding question was to analyze whether there is a correlation between how many estimated homicide rate in a country in a specific year for each sex and the number of medical doctors per 10,000 population in that country in that year together with estimated rate of alcohol consumption per capita for each sex in that country and year.
+
+Based on the histogram, line chart and scatter plot computed in the previous sections, we can see that in a given country and a given year for each sex, the rate of homicide in that country and in that year of the given sex is correlated with the number of medical doctors per 10,000 population in the country together with the estimated rate of alcohol consumption per capita of a certain sex in the country and year.
+
+# Limitations
+
+The most noticeable limitation of this research project is that the results of this project relies on the representativity of the data collected for each country in each year. After we performed data merging, the size of the dataset becomes small with only a few countries for each continent, which makes it hard for us to understand whether the above conclusion is a universal phenomenon across the world or problems for a few countries in the world.
+
+# Future Steps
+
+One of the future steps that we can take after completing this report is to gather additional data so that we can conduct more in-depth analysis on the correlation between the estimated rate of homicide cases and a country’s medical capabilities. Currently, we only have the data for the number of medical doctors, which is only one indicator of a country’s overall medical capabilities, and we can collect data related to health infrastructure such as the number of hospitals and clinics, as well as the number of high technological equipment. 
+
+Additionally, other factors of social security and stability besides the number of homicide cases such as other crime and violence case rates, and preparedness of the country for violence and crimes. 
+

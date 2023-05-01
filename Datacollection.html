@@ -1,0 +1,1845 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Zichun Xu" />
+
+
+<title>JSC370 Final Project</title>
+
+<script src="site_libs/header-attrs-2.19/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<script src="site_libs/htmlwidgets-1.6.1/htmlwidgets.js"></script>
+<script src="site_libs/plotly-binding-4.10.1/plotly.js"></script>
+<script src="site_libs/typedarray-0.1/typedarray.min.js"></script>
+<link href="site_libs/crosstalk-1.2.0/css/crosstalk.min.css" rel="stylesheet" />
+<script src="site_libs/crosstalk-1.2.0/js/crosstalk.min.js"></script>
+<link href="site_libs/plotly-htmlwidgets-css-2.11.1/plotly-htmlwidgets.css" rel="stylesheet" />
+<script src="site_libs/plotly-main-2.11.1/plotly-latest.min.js"></script>
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">JSC370 Final Project</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">
+    <span class="fa fa-home"></span>
+     
+    Home
+  </a>
+</li>
+<li>
+  <a href="Datacollection.html">
+    <span class="fa fa-twitter"></span>
+     
+    Method &amp; Result
+  </a>
+</li>
+<li>
+  <a href="Result.html">
+    <span class="fa fa-book-open"></span>
+     
+    Conclution
+  </a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">JSC370 Final Project</h1>
+<h4 class="author">Zichun Xu</h4>
+
+</div>
+
+
+<div id="methods" class="section level1">
+<h1>Methods</h1>
+<p>The first steps for this statistical report is to collect data that
+we would like to analyze and draw conclusions, then explore and clean
+the data collected to make sure that it fits our requirements for
+further analysis.</p>
+</div>
+<div id="data-collection" class="section level1">
+<h1>Data Collection</h1>
+<p>To collect the data of rates of homicides per 100,000 population, we
+simply need to navigate to the Global Health Observatory site from the
+WHO home website, and then click on “indicators” and search for this
+dataset. On the WHO website for this dataset, there are also
+visualizations, data previews, metadata information and related
+indicators to give a general information of this dataset. We can
+directly download the dataset from WHO’s website as a .csv file and then
+read this data into R using the tidyverse library.</p>
+<div id="homicides-data" class="section level2">
+<h2>1. Homicides Data</h2>
+<p>Homicides table, which is shown below, demonstrates the top 6 rows of
+the homicide number data which were loaded into R from the downloaded
+homicides.csv file from WHO’s website. This dataset contains estimates
+of homicides rate (per 100,000 population) from 2000 to 2019, and
+includes estimates for male, female and both sexes total for each
+country around the world. This dataset contains 10980 observations each
+of 34 variables, including information of the location of country
+(Location), the time period (Period), the estimates of homicides rate
+(per 100,000 population) (FactValueNumeric) together with a lower bound
+(FactValueNumericLow) and an upper bound (FactValueNumericHigh) of this
+estimate., as well as the sex corresponding to each estimate (Dim1) with
+values “Female”, “Male” or “Both sexes”.</p>
+<table>
+<caption>Homicides Table</caption>
+<thead>
+<tr class="header">
+<th align="left">IndicatorCode</th>
+<th align="left">Indicator</th>
+<th align="left">ValueType</th>
+<th align="left">ParentLocationCode</th>
+<th align="left">ParentLocation</th>
+<th align="left">Location.type</th>
+<th align="left">SpatialDimValueCode</th>
+<th align="left">Location</th>
+<th align="left">Period.type</th>
+<th align="right">Period</th>
+<th align="left">IsLatestYear</th>
+<th align="left">Dim1.type</th>
+<th align="left">Dim1</th>
+<th align="left">Dim1ValueCode</th>
+<th align="left">Dim2.type</th>
+<th align="left">Dim2</th>
+<th align="left">Dim2ValueCode</th>
+<th align="left">Dim3.type</th>
+<th align="left">Dim3</th>
+<th align="left">Dim3ValueCode</th>
+<th align="left">DataSourceDimValueCode</th>
+<th align="left">DataSource</th>
+<th align="left">FactValueNumericPrefix</th>
+<th align="right">FactValueNumeric</th>
+<th align="left">FactValueUoM</th>
+<th align="left">FactValueNumericLowPrefix</th>
+<th align="right">FactValueNumericLow</th>
+<th align="left">FactValueNumericHighPrefix</th>
+<th align="right">FactValueNumericHigh</th>
+<th align="left">Value</th>
+<th align="left">FactValueTranslationID</th>
+<th align="left">FactComments</th>
+<th align="left">Language</th>
+<th align="left">DateModified</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">VIOLENCE_HOMICIDERATE</td>
+<td align="left">Estimates of rates of homicides per 100 000
+population</td>
+<td align="left">numeric</td>
+<td align="left">WPR</td>
+<td align="left">Western Pacific</td>
+<td align="left">Country</td>
+<td align="left">JPN</td>
+<td align="left">Japan</td>
+<td align="left">Year</td>
+<td align="right">2019</td>
+<td align="left">TRUE</td>
+<td align="left">Sex</td>
+<td align="left">Female</td>
+<td align="left">FMLE</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="right">0.18</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="right">0.160</td>
+<td align="left">NA</td>
+<td align="right">0.20</td>
+<td align="left">0.18 [0.16 – 0.2]</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">EN</td>
+<td align="left">2021-02-09T05:00:00.000Z</td>
+</tr>
+<tr class="even">
+<td align="left">VIOLENCE_HOMICIDERATE</td>
+<td align="left">Estimates of rates of homicides per 100 000
+population</td>
+<td align="left">numeric</td>
+<td align="left">EMR</td>
+<td align="left">Eastern Mediterranean</td>
+<td align="left">Country</td>
+<td align="left">ARE</td>
+<td align="left">United Arab Emirates</td>
+<td align="left">Year</td>
+<td align="right">2019</td>
+<td align="left">TRUE</td>
+<td align="left">Sex</td>
+<td align="left">Female</td>
+<td align="left">FMLE</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="right">0.21</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="right">0.088</td>
+<td align="left">NA</td>
+<td align="right">0.42</td>
+<td align="left">0.21 [0.088 – 0.42]</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">EN</td>
+<td align="left">2021-02-09T05:00:00.000Z</td>
+</tr>
+<tr class="odd">
+<td align="left">VIOLENCE_HOMICIDERATE</td>
+<td align="left">Estimates of rates of homicides per 100 000
+population</td>
+<td align="left">numeric</td>
+<td align="left">WPR</td>
+<td align="left">Western Pacific</td>
+<td align="left">Country</td>
+<td align="left">JPN</td>
+<td align="left">Japan</td>
+<td align="left">Year</td>
+<td align="right">2019</td>
+<td align="left">TRUE</td>
+<td align="left">Sex</td>
+<td align="left">Both sexes</td>
+<td align="left">BTSX</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="right">0.21</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="right">0.190</td>
+<td align="left">NA</td>
+<td align="right">0.23</td>
+<td align="left">0.21 [0.19 – 0.23]</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">EN</td>
+<td align="left">2021-02-09T05:00:00.000Z</td>
+</tr>
+<tr class="even">
+<td align="left">VIOLENCE_HOMICIDERATE</td>
+<td align="left">Estimates of rates of homicides per 100 000
+population</td>
+<td align="left">numeric</td>
+<td align="left">WPR</td>
+<td align="left">Western Pacific</td>
+<td align="left">Country</td>
+<td align="left">SGP</td>
+<td align="left">Singapore</td>
+<td align="left">Year</td>
+<td align="right">2019</td>
+<td align="left">TRUE</td>
+<td align="left">Sex</td>
+<td align="left">Female</td>
+<td align="left">FMLE</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="right">0.22</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="right">0.170</td>
+<td align="left">NA</td>
+<td align="right">0.29</td>
+<td align="left">0.22 [0.17 – 0.29]</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">EN</td>
+<td align="left">2021-02-09T05:00:00.000Z</td>
+</tr>
+<tr class="odd">
+<td align="left">VIOLENCE_HOMICIDERATE</td>
+<td align="left">Estimates of rates of homicides per 100 000
+population</td>
+<td align="left">numeric</td>
+<td align="left">WPR</td>
+<td align="left">Western Pacific</td>
+<td align="left">Country</td>
+<td align="left">JPN</td>
+<td align="left">Japan</td>
+<td align="left">Year</td>
+<td align="right">2019</td>
+<td align="left">TRUE</td>
+<td align="left">Sex</td>
+<td align="left">Male</td>
+<td align="left">MLE</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="right">0.24</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="right">0.220</td>
+<td align="left">NA</td>
+<td align="right">0.26</td>
+<td align="left">0.24 [0.22 – 0.26]</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">EN</td>
+<td align="left">2021-02-09T05:00:00.000Z</td>
+</tr>
+<tr class="even">
+<td align="left">VIOLENCE_HOMICIDERATE</td>
+<td align="left">Estimates of rates of homicides per 100 000
+population</td>
+<td align="left">numeric</td>
+<td align="left">WPR</td>
+<td align="left">Western Pacific</td>
+<td align="left">Country</td>
+<td align="left">SGP</td>
+<td align="left">Singapore</td>
+<td align="left">Year</td>
+<td align="right">2019</td>
+<td align="left">TRUE</td>
+<td align="left">Sex</td>
+<td align="left">Both sexes</td>
+<td align="left">BTSX</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="right">0.25</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="right">0.200</td>
+<td align="left">NA</td>
+<td align="right">0.32</td>
+<td align="left">0.25 [0.2 – 0.32]</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">EN</td>
+<td align="left">2021-02-09T05:00:00.000Z</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="doctors-data" class="section level2">
+<h2>2. Doctors Data</h2>
+<p>The number of medical doctors dataset can be collected also from
+WHO’s official website. After navigating to the Global Health
+Observatory page, we can search for the theme of Global Health Workforce
+statistics and directly download the number of medical doctors for each
+country from the year 2000 - 2021 in a .csv format from the website.
+Then, this .csv file is also loaded into R using the tidyverse
+library.</p>
+<p>Doctor table shown below contains the first 6 rows of the number of
+medical doctors in each country dataset which were loaded into R from
+the downloaded .csv file. This dataset contains estimates of each
+country’s number of medical doctors per 10,000 population from the year
+2000 to 2019. This dataset contains 2903 observations of 34 variables,
+including information of the continent or region location
+(ParentLocation) of each estimate, the country location (Location) of
+each estimate, the time period (Period), the estimates of the number of
+medical doctors per 10,000 population (FactValueNumeric).</p>
+<table>
+<thead>
+<tr class="header">
+<th align="left">IndicatorCode</th>
+<th align="left">Indicator</th>
+<th align="left">ValueType</th>
+<th align="left">ParentLocationCode</th>
+<th align="left">ParentLocation</th>
+<th align="left">Location.type</th>
+<th align="left">SpatialDimValueCode</th>
+<th align="left">Location</th>
+<th align="left">Period.type</th>
+<th align="right">Period</th>
+<th align="left">IsLatestYear</th>
+<th align="left">Dim1.type</th>
+<th align="left">Dim1</th>
+<th align="left">Dim1ValueCode</th>
+<th align="left">Dim2.type</th>
+<th align="left">Dim2</th>
+<th align="left">Dim2ValueCode</th>
+<th align="left">Dim3.type</th>
+<th align="left">Dim3</th>
+<th align="left">Dim3ValueCode</th>
+<th align="left">DataSourceDimValueCode</th>
+<th align="left">DataSource</th>
+<th align="left">FactValueNumericPrefix</th>
+<th align="right">FactValueNumeric</th>
+<th align="left">FactValueUoM</th>
+<th align="left">FactValueNumericLowPrefix</th>
+<th align="left">FactValueNumericLow</th>
+<th align="left">FactValueNumericHighPrefix</th>
+<th align="left">FactValueNumericHigh</th>
+<th align="right">Value</th>
+<th align="left">FactValueTranslationID</th>
+<th align="left">FactComments</th>
+<th align="left">Language</th>
+<th align="left">DateModified</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">HWF_0001</td>
+<td align="left">Medical doctors (per 10,000)</td>
+<td align="left">numeric</td>
+<td align="left">AFR</td>
+<td align="left">Africa</td>
+<td align="left">Country</td>
+<td align="left">TCD</td>
+<td align="left">Chad</td>
+<td align="left">Year</td>
+<td align="right">2021</td>
+<td align="left">true</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="right">0.58</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="right">0.58</td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left">EN</td>
+<td align="left">2023-01-12T05:00:00.000Z</td>
+</tr>
+<tr class="even">
+<td align="left">HWF_0001</td>
+<td align="left">Medical doctors (per 10,000)</td>
+<td align="left">numeric</td>
+<td align="left">AFR</td>
+<td align="left">Africa</td>
+<td align="left">Country</td>
+<td align="left">TGO</td>
+<td align="left">Togo</td>
+<td align="left">Year</td>
+<td align="right">2021</td>
+<td align="left">true</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="right">0.59</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="right">0.59</td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left">EN</td>
+<td align="left">2023-01-12T05:00:00.000Z</td>
+</tr>
+<tr class="odd">
+<td align="left">HWF_0001</td>
+<td align="left">Medical doctors (per 10,000)</td>
+<td align="left">numeric</td>
+<td align="left">WPR</td>
+<td align="left">Western Pacific</td>
+<td align="left">Country</td>
+<td align="left">PNG</td>
+<td align="left">Papua New Guinea</td>
+<td align="left">Year</td>
+<td align="right">2021</td>
+<td align="left">true</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="right">0.63</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="right">0.63</td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left">EN</td>
+<td align="left">2023-01-12T05:00:00.000Z</td>
+</tr>
+<tr class="even">
+<td align="left">HWF_0001</td>
+<td align="left">Medical doctors (per 10,000)</td>
+<td align="left">numeric</td>
+<td align="left">AFR</td>
+<td align="left">Africa</td>
+<td align="left">Country</td>
+<td align="left">BDI</td>
+<td align="left">Burundi</td>
+<td align="left">Year</td>
+<td align="right">2021</td>
+<td align="left">true</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="right">0.65</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="right">0.65</td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left">EN</td>
+<td align="left">2023-01-12T05:00:00.000Z</td>
+</tr>
+<tr class="odd">
+<td align="left">HWF_0001</td>
+<td align="left">Medical doctors (per 10,000)</td>
+<td align="left">numeric</td>
+<td align="left">AFR</td>
+<td align="left">Africa</td>
+<td align="left">Country</td>
+<td align="left">MOZ</td>
+<td align="left">Mozambique</td>
+<td align="left">Year</td>
+<td align="right">2021</td>
+<td align="left">true</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="right">0.81</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="right">0.81</td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left">EN</td>
+<td align="left">2023-01-12T05:00:00.000Z</td>
+</tr>
+<tr class="even">
+<td align="left">HWF_0001</td>
+<td align="left">Medical doctors (per 10,000)</td>
+<td align="left">numeric</td>
+<td align="left">AFR</td>
+<td align="left">Africa</td>
+<td align="left">Country</td>
+<td align="left">CMR</td>
+<td align="left">Cameroon</td>
+<td align="left">Year</td>
+<td align="right">2021</td>
+<td align="left">true</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="right">1.24</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="right">1.24</td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left">EN</td>
+<td align="left">2023-01-12T05:00:00.000Z</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="alcohol-consumption-data" class="section level2">
+<h2>3. Alcohol Consumption Data</h2>
+<p>The WHO’s alcohol consumption dataset can be directly downloaded from
+HW2 as a .csv file and loaded into R using the tidyverse library.
+Alcohol table shown below contains the first 6 rows of the WHO alcohol
+consumption in each country dataset which were loaded into R from the
+downloaded .csv file. This dataset contains estimates of each country’s
+alcohol consumption in liters per capita from 2000 to 2019, including
+the WHO Region of the country (WHO.Region), the country name (Country),
+the year of the estimation (Year), sex of the estimation (Sex) with
+values “Both sexes”, “Female” or “Male, as well as the estimates of
+alcohol consumption in liters per capita including a low and high
+estimation and a string representation.</p>
+<table>
+<thead>
+<tr class="header">
+<th align="left">WHO.Region.Code</th>
+<th align="left">WHO.Region</th>
+<th align="left">Country.Code</th>
+<th align="left">Country</th>
+<th align="right">Year</th>
+<th align="left">Sex</th>
+<th
+align="right">Alcohol.total.per.capita..15…consumption.in.liters..numeric.</th>
+<th
+align="right">Alcohol.total.per.capita..15…consumption.in.liters..low.estimation.</th>
+<th
+align="right">Alcohol.total.per.capita..15…consumption.in.liters..high.estimation.</th>
+<th
+align="left">Alcohol.total.per.capita..15…consumption.in.liters..string.</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">SEAR</td>
+<td align="left">South-East Asia</td>
+<td align="left">BGD</td>
+<td align="left">Bangladesh</td>
+<td align="right">2019</td>
+<td align="left">Both sexes</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="left">0 [0 – 0]</td>
+</tr>
+<tr class="even">
+<td align="left">SEAR</td>
+<td align="left">South-East Asia</td>
+<td align="left">BGD</td>
+<td align="left">Bangladesh</td>
+<td align="right">2019</td>
+<td align="left">Female</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="left">0 [0 – 0]</td>
+</tr>
+<tr class="odd">
+<td align="left">SEAR</td>
+<td align="left">South-East Asia</td>
+<td align="left">BGD</td>
+<td align="left">Bangladesh</td>
+<td align="right">2019</td>
+<td align="left">Male</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="left">0 [0 – 0]</td>
+</tr>
+<tr class="even">
+<td align="left">EMR</td>
+<td align="left">Eastern Mediterranean</td>
+<td align="left">KWT</td>
+<td align="left">Kuwait</td>
+<td align="right">2019</td>
+<td align="left">Both sexes</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="left">0 [0 – 0]</td>
+</tr>
+<tr class="odd">
+<td align="left">EMR</td>
+<td align="left">Eastern Mediterranean</td>
+<td align="left">KWT</td>
+<td align="left">Kuwait</td>
+<td align="right">2019</td>
+<td align="left">Female</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="left">0 [0 – 0]</td>
+</tr>
+<tr class="even">
+<td align="left">EMR</td>
+<td align="left">Eastern Mediterranean</td>
+<td align="left">KWT</td>
+<td align="left">Kuwait</td>
+<td align="right">2019</td>
+<td align="left">Male</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="left">0 [0 – 0]</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="data-cleaning" class="section level1">
+<h1>Data Cleaning</h1>
+<p>Firstly, I would check if there is any NA valued data in the dataset
+and keep only the necessary data columns needed for this project in the
+homicides table (Table 1), doctor table (Table 2), and alcohol table
+(Table 3). Since some columns contain NA values in all the rows in the
+doctor table and homicides table, I deleted those columns. Besides, for
+the convenience of reading and understanding the dataset, we need to
+change the column names in homicides table, doctor table and alcohol
+table to make them more readable.</p>
+<p>Before merging all data, the three tables with top 6 rows are shown
+below:</p>
+<p>homicides table (after cleaning):</p>
+<table>
+<thead>
+<tr class="header">
+<th></th>
+<th align="left">ParentLocation</th>
+<th align="left">Location</th>
+<th align="right">Period</th>
+<th align="left">Sex</th>
+<th align="right">AverageValue</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1</td>
+<td align="left">Western Pacific</td>
+<td align="left">Japan</td>
+<td align="right">2019</td>
+<td align="left">Female</td>
+<td align="right">0.18</td>
+</tr>
+<tr class="even">
+<td>2</td>
+<td align="left">Eastern Mediterranean</td>
+<td align="left">United Arab Emirates</td>
+<td align="right">2019</td>
+<td align="left">Female</td>
+<td align="right">0.21</td>
+</tr>
+<tr class="odd">
+<td>4</td>
+<td align="left">Western Pacific</td>
+<td align="left">Singapore</td>
+<td align="right">2019</td>
+<td align="left">Female</td>
+<td align="right">0.22</td>
+</tr>
+<tr class="even">
+<td>5</td>
+<td align="left">Western Pacific</td>
+<td align="left">Japan</td>
+<td align="right">2019</td>
+<td align="left">Male</td>
+<td align="right">0.24</td>
+</tr>
+<tr class="odd">
+<td>7</td>
+<td align="left">Eastern Mediterranean</td>
+<td align="left">Qatar</td>
+<td align="right">2019</td>
+<td align="left">Female</td>
+<td align="right">0.26</td>
+</tr>
+<tr class="even">
+<td>8</td>
+<td align="left">Eastern Mediterranean</td>
+<td align="left">Bahrain</td>
+<td align="right">2019</td>
+<td align="left">Female</td>
+<td align="right">0.28</td>
+</tr>
+</tbody>
+</table>
+<p>alcohol table (after cleaning):</p>
+<table>
+<thead>
+<tr class="header">
+<th></th>
+<th align="left">WHO.Region.Code</th>
+<th align="left">WHO.Region</th>
+<th align="left">Country.Code</th>
+<th align="left">Country</th>
+<th align="right">Year</th>
+<th align="left">Sex</th>
+<th align="right">numeric</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>2</td>
+<td align="left">SEAR</td>
+<td align="left">South-East Asia</td>
+<td align="left">BGD</td>
+<td align="left">Bangladesh</td>
+<td align="right">2019</td>
+<td align="left">Female</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td>3</td>
+<td align="left">SEAR</td>
+<td align="left">South-East Asia</td>
+<td align="left">BGD</td>
+<td align="left">Bangladesh</td>
+<td align="right">2019</td>
+<td align="left">Male</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td>5</td>
+<td align="left">EMR</td>
+<td align="left">Eastern Mediterranean</td>
+<td align="left">KWT</td>
+<td align="left">Kuwait</td>
+<td align="right">2019</td>
+<td align="left">Female</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td>6</td>
+<td align="left">EMR</td>
+<td align="left">Eastern Mediterranean</td>
+<td align="left">KWT</td>
+<td align="left">Kuwait</td>
+<td align="right">2019</td>
+<td align="left">Male</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td>8</td>
+<td align="left">AFR</td>
+<td align="left">Africa</td>
+<td align="left">MRT</td>
+<td align="left">Mauritania</td>
+<td align="right">2019</td>
+<td align="left">Female</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td>9</td>
+<td align="left">AFR</td>
+<td align="left">Africa</td>
+<td align="left">MRT</td>
+<td align="left">Mauritania</td>
+<td align="right">2019</td>
+<td align="left">Male</td>
+<td align="right">0</td>
+</tr>
+</tbody>
+</table>
+<p>doctor table (after cleaning):</p>
+<table>
+<thead>
+<tr class="header">
+<th align="left">ParentLocation</th>
+<th align="left">Location</th>
+<th align="right">Period</th>
+<th align="right">FactValueNumeric</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Africa</td>
+<td align="left">Chad</td>
+<td align="right">2021</td>
+<td align="right">0.58</td>
+</tr>
+<tr class="even">
+<td align="left">Africa</td>
+<td align="left">Togo</td>
+<td align="right">2021</td>
+<td align="right">0.59</td>
+</tr>
+<tr class="odd">
+<td align="left">Western Pacific</td>
+<td align="left">Papua New Guinea</td>
+<td align="right">2021</td>
+<td align="right">0.63</td>
+</tr>
+<tr class="even">
+<td align="left">Africa</td>
+<td align="left">Burundi</td>
+<td align="right">2021</td>
+<td align="right">0.65</td>
+</tr>
+<tr class="odd">
+<td align="left">Africa</td>
+<td align="left">Mozambique</td>
+<td align="right">2021</td>
+<td align="right">0.81</td>
+</tr>
+<tr class="even">
+<td align="left">Africa</td>
+<td align="left">Cameroon</td>
+<td align="right">2021</td>
+<td align="right">1.24</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="data-merging" class="section level1">
+<h1>Data Merging</h1>
+<p>Since we need to merge three tables together, we should first merge
+two tables and then merge the other one.</p>
+<p>Firstly, we will merge the homicides table with alcohol table first
+with the “Location”, “Period”, “Sex”, “ParentLocation” columns and then
+merge with the medical doctors table with “Location”, “Period”, and
+“ParentLocation” columns to get the new table called “met2”.</p>
+<p>Then, we need to change the column names to the corresponding names
+of the values.</p>
+<p>After merging, the merge table reduced the number of countries and
+years, and we found out that some countries’ data is not complete from
+2000 to 2019 so we removed these countries and only kept those that have
+complete data from 2000 to 2019. The resulting data has only 40
+countries from different continents left, and is called met_40.</p>
+<table>
+<thead>
+<tr class="header">
+<th align="left">Location</th>
+<th align="right">Period</th>
+<th align="left">ParentLocation</th>
+<th align="left">Sex</th>
+<th align="right">Homicides_value</th>
+<th align="right">Alcohol_numeric</th>
+<th align="right">doctor_num</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Australia</td>
+<td align="right">2010</td>
+<td align="left">Western Pacific</td>
+<td align="left">Female</td>
+<td align="right">0.88</td>
+<td align="right">6.14</td>
+<td align="right">33.64</td>
+</tr>
+<tr class="even">
+<td align="left">Australia</td>
+<td align="right">2011</td>
+<td align="left">Western Pacific</td>
+<td align="left">Female</td>
+<td align="right">0.89</td>
+<td align="right">5.95</td>
+<td align="right">33.14</td>
+</tr>
+<tr class="odd">
+<td align="left">Australia</td>
+<td align="right">2014</td>
+<td align="left">Western Pacific</td>
+<td align="left">Male</td>
+<td align="right">1.39</td>
+<td align="right">16.72</td>
+<td align="right">34.50</td>
+</tr>
+<tr class="even">
+<td align="left">Australia</td>
+<td align="right">2012</td>
+<td align="left">Western Pacific</td>
+<td align="left">Male</td>
+<td align="right">1.77</td>
+<td align="right">17.64</td>
+<td align="right">33.11</td>
+</tr>
+<tr class="odd">
+<td align="left">Australia</td>
+<td align="right">2013</td>
+<td align="left">Western Pacific</td>
+<td align="left">Male</td>
+<td align="right">1.39</td>
+<td align="right">17.16</td>
+<td align="right">33.74</td>
+</tr>
+<tr class="even">
+<td align="left">Australia</td>
+<td align="right">2013</td>
+<td align="left">Western Pacific</td>
+<td align="left">Female</td>
+<td align="right">0.82</td>
+<td align="right">5.58</td>
+<td align="right">33.74</td>
+</tr>
+</tbody>
+</table>
+<p>We found out that some of the Asian countries such as China and Korea
+were mislabeled to Western Pacific by the WHO, so we manually changed
+their continent label.</p>
+<p>After we performed the above cleaning step, there are Asian countries
+present in the dataset.</p>
+<p>From the table below, we can see that there are six
+continents/regions with 40 countries in the merged dataset met_40.
+Europe has the most number of countries (29) and most of the other
+parent locations have 2-3 countries.</p>
+<table>
+<thead>
+<tr class="header">
+<th align="left">ParentLocation</th>
+<th align="right">Total_Countries</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Africa</td>
+<td align="right">2</td>
+</tr>
+<tr class="even">
+<td align="left">Americas</td>
+<td align="right">2</td>
+</tr>
+<tr class="odd">
+<td align="left">Asia</td>
+<td align="right">2</td>
+</tr>
+<tr class="even">
+<td align="left">Eastern Mediterranean</td>
+<td align="right">2</td>
+</tr>
+<tr class="odd">
+<td align="left">Europe</td>
+<td align="right">29</td>
+</tr>
+<tr class="even">
+<td align="left">Western Pacific</td>
+<td align="right">3</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="data-exploration" class="section level1">
+<h1>Data Exploration</h1>
+<p>After the data is cleaned and merged together, we can start to
+explore the data and plot the histogram for variables of interest and
+important values. The three histograms below demonstrate the values of
+the three important variables that we would like to use.</p>
+<p>The first histogram shows the frequency distribution of the estimate
+of rate of homicides (per 100,000 population) by different categories of
+sexes over all countries in every year from 2000 to 2019.</p>
+<div id="figure-1" class="section level5">
+<h5>Figure 1:</h5>
+<p><img
+src="Datacollection_files/figure-html/unnamed-chunk-31-1.gif" /><!-- --></p>
+<p>This animated histogram shows the homicides value in different
+countries in each year. In this animated histogram, there is a
+consistent right tail, and as the rates of homicides increase, the
+number of countries having the female homicides rate equal to this rate
+decreases, and most countries have the estimated rates of homicide in
+range [0, 5]. The minimum homicides rate value estimate in the met_40 is
+0.003. Since the rate of homicides in some counties is too small and
+very close to zero, the histogram counts many countries in bin close to
+zero, but these are not the absolute zero values.</p>
+<p>The second histogram shows the frequency of the total alcohol
+assumption in liters per captia by different sexes over all countries in
+each year from 2000 to 2019.</p>
+</div>
+<div id="figure-2" class="section level5">
+<h5>Figure 2:</h5>
+<p><img
+src="Datacollection_files/figure-html/unnamed-chunk-32-1.gif" /><!-- --></p>
+<p>From the above animated histogram, the estimate of alcohol
+consumption of females in each year is more concentrately distributed,
+and the estimate of alcohol consumption of male in each year is more
+spread out. The number of countries with estimate female alcohol
+consumption in range [0, 10] is higher than that of male alcohol
+consumption. However, in the range beyond 10 liters per capita, there
+are more countries with estimated male alcohol consumption equal to this
+rate compared with estimated female alcohol consumption.</p>
+<p>The third histogram show the Medical doctors (per 10000 population)
+over all countries in each year from 2000 to 2019.</p>
+</div>
+<div id="figure-3" class="section level5">
+<h5>Figure 3:</h5>
+<p><img
+src="Datacollection_files/figure-html/unnamed-chunk-33-1.gif" /><!-- --></p>
+<p><img src="Datacollection_files/figure-html/unnamed-chunk-34-1.png" width="672" /></p>
+<p>Form the above histogram, the plot of the medical doctors(per 10000
+population) is symmetric and unimodal. Majority of the countries have
+20-40 medical doctors per 10000 population and very few countries have
+less than 10 or more than 50 medical doctors per 10000 population.</p>
+</div>
+</div>
+<div id="preliminary-results" class="section level1">
+<h1>Preliminary Results</h1>
+<p>The key question that we are interested in is if there is a
+correlation between the rate of homicide and the number of medical
+doctors together with alcohol consumption level in each country from
+2000 - 2019.</p>
+<p>We can analyze the data in two ways. Firstly, we can compare all data
+points collected in the same year for different countries around the
+globe. This analysis can help us understand whether homicide rates is
+correlated with the number of medical doctors in the same year in
+various countries.</p>
+<p>The table below summarizes the mean and standard devication of the
+estimates of homicide cases, alcohol consumption, and the number of
+medical doctors across all countries in each year. We will use the mean
+values of estimates of homicide cases, alcohol consumption, and the
+number of medical doctors across all countries to understand the
+relationship between these three variables.</p>
+<table>
+<thead>
+<tr class="header">
+<th align="right">Period</th>
+<th align="right">mean_homicides</th>
+<th align="right">sd_homicides</th>
+<th align="right">mean_alcohol</th>
+<th align="right">sd_alcohol</th>
+<th align="right">mean_doctor</th>
+<th align="right">sd_doctor</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">2000</td>
+<td align="right">6.773125</td>
+<td align="right">20.431623</td>
+<td align="right">9.827625</td>
+<td align="right">7.438127</td>
+<td align="right">26.19575</td>
+<td align="right">9.693731</td>
+</tr>
+<tr class="even">
+<td align="right">2001</td>
+<td align="right">6.846625</td>
+<td align="right">20.869130</td>
+<td align="right">9.827625</td>
+<td align="right">7.438127</td>
+<td align="right">26.51025</td>
+<td align="right">9.698075</td>
+</tr>
+<tr class="odd">
+<td align="right">2002</td>
+<td align="right">6.798625</td>
+<td align="right">21.406288</td>
+<td align="right">9.774375</td>
+<td align="right">7.410412</td>
+<td align="right">26.90450</td>
+<td align="right">9.855484</td>
+</tr>
+<tr class="even">
+<td align="right">2003</td>
+<td align="right">6.020500</td>
+<td align="right">16.871013</td>
+<td align="right">9.798875</td>
+<td align="right">7.419781</td>
+<td align="right">27.33025</td>
+<td align="right">9.877903</td>
+</tr>
+<tr class="odd">
+<td align="right">2004</td>
+<td align="right">5.658250</td>
+<td align="right">15.780549</td>
+<td align="right">9.857375</td>
+<td align="right">7.422888</td>
+<td align="right">28.08400</td>
+<td align="right">9.984940</td>
+</tr>
+<tr class="even">
+<td align="right">2005</td>
+<td align="right">5.355250</td>
+<td align="right">13.576778</td>
+<td align="right">9.984750</td>
+<td align="right">7.480996</td>
+<td align="right">28.43375</td>
+<td align="right">10.170166</td>
+</tr>
+<tr class="odd">
+<td align="right">2006</td>
+<td align="right">5.119250</td>
+<td align="right">13.328287</td>
+<td align="right">10.022500</td>
+<td align="right">7.471207</td>
+<td align="right">28.97975</td>
+<td align="right">10.345343</td>
+</tr>
+<tr class="even">
+<td align="right">2007</td>
+<td align="right">4.686500</td>
+<td align="right">12.376961</td>
+<td align="right">9.939500</td>
+<td align="right">7.433821</td>
+<td align="right">29.48650</td>
+<td align="right">10.418888</td>
+</tr>
+<tr class="odd">
+<td align="right">2008</td>
+<td align="right">4.725500</td>
+<td align="right">12.697525</td>
+<td align="right">9.663375</td>
+<td align="right">7.243034</td>
+<td align="right">30.02450</td>
+<td align="right">10.356815</td>
+</tr>
+<tr class="even">
+<td align="right">2009</td>
+<td align="right">4.860625</td>
+<td align="right">14.398560</td>
+<td align="right">9.427375</td>
+<td align="right">7.033945</td>
+<td align="right">30.35650</td>
+<td align="right">10.480726</td>
+</tr>
+<tr class="odd">
+<td align="right">2010</td>
+<td align="right">4.694913</td>
+<td align="right">13.900324</td>
+<td align="right">9.301375</td>
+<td align="right">6.905815</td>
+<td align="right">30.69125</td>
+<td align="right">10.674367</td>
+</tr>
+<tr class="even">
+<td align="right">2011</td>
+<td align="right">4.613875</td>
+<td align="right">13.074207</td>
+<td align="right">9.296500</td>
+<td align="right">6.897100</td>
+<td align="right">30.86375</td>
+<td align="right">10.294248</td>
+</tr>
+<tr class="odd">
+<td align="right">2012</td>
+<td align="right">4.315125</td>
+<td align="right">12.426179</td>
+<td align="right">9.232750</td>
+<td align="right">6.869188</td>
+<td align="right">31.13350</td>
+<td align="right">10.228461</td>
+</tr>
+<tr class="even">
+<td align="right">2013</td>
+<td align="right">4.044000</td>
+<td align="right">11.573586</td>
+<td align="right">9.150375</td>
+<td align="right">6.810679</td>
+<td align="right">31.70275</td>
+<td align="right">10.055729</td>
+</tr>
+<tr class="odd">
+<td align="right">2014</td>
+<td align="right">3.726750</td>
+<td align="right">10.660572</td>
+<td align="right">9.117625</td>
+<td align="right">6.755246</td>
+<td align="right">32.23825</td>
+<td align="right">9.956507</td>
+</tr>
+<tr class="even">
+<td align="right">2015</td>
+<td align="right">3.633750</td>
+<td align="right">10.096940</td>
+<td align="right">9.121000</td>
+<td align="right">6.712349</td>
+<td align="right">32.68800</td>
+<td align="right">9.971477</td>
+</tr>
+<tr class="odd">
+<td align="right">2016</td>
+<td align="right">3.577625</td>
+<td align="right">9.971703</td>
+<td align="right">9.056625</td>
+<td align="right">6.598502</td>
+<td align="right">33.35450</td>
+<td align="right">10.902363</td>
+</tr>
+<tr class="even">
+<td align="right">2017</td>
+<td align="right">3.642125</td>
+<td align="right">10.042360</td>
+<td align="right">8.985500</td>
+<td align="right">6.487067</td>
+<td align="right">34.10950</td>
+<td align="right">10.816740</td>
+</tr>
+<tr class="odd">
+<td align="right">2018</td>
+<td align="right">3.454625</td>
+<td align="right">9.678705</td>
+<td align="right">8.944500</td>
+<td align="right">6.441333</td>
+<td align="right">34.85250</td>
+<td align="right">11.796345</td>
+</tr>
+<tr class="even">
+<td align="right">2019</td>
+<td align="right">3.371000</td>
+<td align="right">9.488201</td>
+<td align="right">8.944500</td>
+<td align="right">6.441333</td>
+<td align="right">35.76250</td>
+<td align="right">11.699179</td>
+</tr>
+<tr class="odd">
+<td align="right">The plot</td>
+<td align="right">below contains in</td>
+<td align="right">formation of th</td>
+<td align="right">e change of the</td>
+<td align="right">mean estimat</td>
+<td align="right">e of homicide</td>
+<td align="right">cases, mean alcohol consumption and mean number of
+medical doctors over all countries from year 2000 to 2019.</td>
+</tr>
+</tbody>
+</table>
+<div class="plotly html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-9918aa3c2840431c2c01" style="width:672px;height:480px;"></div>
+<script type="application/json" data-for="htmlwidget-9918aa3c2840431c2c01">{"x":{"data":[{"x":[2000,2001,2002,2003,2004,2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,2018,2019],"y":[6.773125,6.846625,6.798625,6.0205,5.65825,5.35525,5.11925,4.6865,4.7255,4.860625,4.6949125,4.613875,4.315125,4.044,3.72675,3.63375,3.577625,3.642125,3.454625,3.371],"text":["Period: 2000<br />mean_homicides: 6.773125<br />colour: homicides_rate","Period: 2001<br />mean_homicides: 6.846625<br />colour: homicides_rate","Period: 2002<br />mean_homicides: 6.798625<br />colour: homicides_rate","Period: 2003<br />mean_homicides: 6.020500<br />colour: homicides_rate","Period: 2004<br />mean_homicides: 5.658250<br />colour: homicides_rate","Period: 2005<br />mean_homicides: 5.355250<br />colour: homicides_rate","Period: 2006<br />mean_homicides: 5.119250<br />colour: homicides_rate","Period: 2007<br />mean_homicides: 4.686500<br />colour: homicides_rate","Period: 2008<br />mean_homicides: 4.725500<br />colour: homicides_rate","Period: 2009<br />mean_homicides: 4.860625<br />colour: homicides_rate","Period: 2010<br />mean_homicides: 4.694913<br />colour: homicides_rate","Period: 2011<br />mean_homicides: 4.613875<br />colour: homicides_rate","Period: 2012<br />mean_homicides: 4.315125<br />colour: homicides_rate","Period: 2013<br />mean_homicides: 4.044000<br />colour: homicides_rate","Period: 2014<br />mean_homicides: 3.726750<br />colour: homicides_rate","Period: 2015<br />mean_homicides: 3.633750<br />colour: homicides_rate","Period: 2016<br />mean_homicides: 3.577625<br />colour: homicides_rate","Period: 2017<br />mean_homicides: 3.642125<br />colour: homicides_rate","Period: 2018<br />mean_homicides: 3.454625<br />colour: homicides_rate","Period: 2019<br />mean_homicides: 3.371000<br />colour: homicides_rate"],"type":"scatter","mode":"lines","line":{"width":1.88976377952756,"color":"rgba(248,118,109,1)","dash":"solid"},"hoveron":"points","name":"homicides_rate","legendgroup":"homicides_rate","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null}],"layout":{"margin":{"t":43.7625570776256,"r":7.30593607305936,"b":40.1826484018265,"l":31.4155251141553},"font":{"color":"rgba(0,0,0,1)","family":"","size":14.6118721461187},"title":{"text":"Figure 4: The mean homicide for countries in each year","font":{"color":"rgba(0,0,0,1)","family":"","size":17.5342465753425},"x":0,"xref":"paper"},"xaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[1999.05,2019.95],"tickmode":"array","ticktext":["2000","2005","2010","2015"],"tickvals":[2000,2005,2010,2015],"categoryorder":"array","categoryarray":["2000","2005","2010","2015"],"nticks":null,"ticks":"","tickcolor":null,"ticklen":3.65296803652968,"tickwidth":0,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.689497716895},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(235,235,235,1)","gridwidth":0.66417600664176,"zeroline":false,"anchor":"y","title":{"text":"Year","font":{"color":"rgba(0,0,0,1)","family":"","size":14.6118721461187}},"hoverformat":".2f"},"yaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[3.19721875,7.02040625],"tickmode":"array","ticktext":["4","5","6","7"],"tickvals":[4,5,6,7],"categoryorder":"array","categoryarray":["4","5","6","7"],"nticks":null,"ticks":"","tickcolor":null,"ticklen":3.65296803652968,"tickwidth":0,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.689497716895},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(235,235,235,1)","gridwidth":0.66417600664176,"zeroline":false,"anchor":"x","title":{"text":"homicides rate per 10000 people","font":{"color":"rgba(0,0,0,1)","family":"","size":14.6118721461187}},"hoverformat":".2f"},"shapes":[{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","x0":0,"x1":1,"y0":0,"y1":1}],"showlegend":true,"legend":{"bgcolor":null,"bordercolor":null,"borderwidth":0,"font":{"color":"rgba(0,0,0,1)","family":"","size":11.689497716895},"title":{"text":"colour","font":{"color":"rgba(0,0,0,1)","family":"","size":14.6118721461187}}},"hovermode":"closest","barmode":"relative"},"config":{"doubleClick":"reset","modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"source":"A","attrs":{"1631f374d6509":{"x":{},"y":{},"colour":{},"type":"scatter"}},"cur_data":"1631f374d6509","visdat":{"1631f374d6509":["function (y) ","x"]},"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.2,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+<div class="plotly html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-8a0061dda698b4c74e38" style="width:672px;height:480px;"></div>
+<script type="application/json" data-for="htmlwidget-8a0061dda698b4c74e38">{"x":{"data":[{"x":[2000,2001,2002,2003,2004,2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,2018,2019],"y":[9.827625,9.827625,9.774375,9.798875,9.857375,9.98475,10.0225,9.9395,9.663375,9.427375,9.301375,9.2965,9.23275,9.150375,9.117625,9.121,9.056625,8.9855,8.9445,8.9445],"text":["Period: 2000<br />mean_alcohol:  9.827625<br />colour: alcohol_rate","Period: 2001<br />mean_alcohol:  9.827625<br />colour: alcohol_rate","Period: 2002<br />mean_alcohol:  9.774375<br />colour: alcohol_rate","Period: 2003<br />mean_alcohol:  9.798875<br />colour: alcohol_rate","Period: 2004<br />mean_alcohol:  9.857375<br />colour: alcohol_rate","Period: 2005<br />mean_alcohol:  9.984750<br />colour: alcohol_rate","Period: 2006<br />mean_alcohol: 10.022500<br />colour: alcohol_rate","Period: 2007<br />mean_alcohol:  9.939500<br />colour: alcohol_rate","Period: 2008<br />mean_alcohol:  9.663375<br />colour: alcohol_rate","Period: 2009<br />mean_alcohol:  9.427375<br />colour: alcohol_rate","Period: 2010<br />mean_alcohol:  9.301375<br />colour: alcohol_rate","Period: 2011<br />mean_alcohol:  9.296500<br />colour: alcohol_rate","Period: 2012<br />mean_alcohol:  9.232750<br />colour: alcohol_rate","Period: 2013<br />mean_alcohol:  9.150375<br />colour: alcohol_rate","Period: 2014<br />mean_alcohol:  9.117625<br />colour: alcohol_rate","Period: 2015<br />mean_alcohol:  9.121000<br />colour: alcohol_rate","Period: 2016<br />mean_alcohol:  9.056625<br />colour: alcohol_rate","Period: 2017<br />mean_alcohol:  8.985500<br />colour: alcohol_rate","Period: 2018<br />mean_alcohol:  8.944500<br />colour: alcohol_rate","Period: 2019<br />mean_alcohol:  8.944500<br />colour: alcohol_rate"],"type":"scatter","mode":"lines","line":{"width":1.88976377952756,"color":"rgba(248,118,109,1)","dash":"solid"},"hoveron":"points","name":"alcohol_rate","legendgroup":"alcohol_rate","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null}],"layout":{"margin":{"t":43.7625570776256,"r":7.30593607305936,"b":40.1826484018265,"l":54.7945205479452},"font":{"color":"rgba(0,0,0,1)","family":"","size":14.6118721461187},"title":{"text":"Figure 5: The alcohol consumption rate for countries in each year","font":{"color":"rgba(0,0,0,1)","family":"","size":17.5342465753425},"x":0,"xref":"paper"},"xaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[1999.05,2019.95],"tickmode":"array","ticktext":["2000","2005","2010","2015"],"tickvals":[2000,2005,2010,2015],"categoryorder":"array","categoryarray":["2000","2005","2010","2015"],"nticks":null,"ticks":"","tickcolor":null,"ticklen":3.65296803652968,"tickwidth":0,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.689497716895},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(235,235,235,1)","gridwidth":0.66417600664176,"zeroline":false,"anchor":"y","title":{"text":"Year","font":{"color":"rgba(0,0,0,1)","family":"","size":14.6118721461187}},"hoverformat":".2f"},"yaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[8.8906,10.0764],"tickmode":"array","ticktext":["9.00","9.25","9.50","9.75","10.00"],"tickvals":[9,9.25,9.5,9.75,10],"categoryorder":"array","categoryarray":["9.00","9.25","9.50","9.75","10.00"],"nticks":null,"ticks":"","tickcolor":null,"ticklen":3.65296803652968,"tickwidth":0,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.689497716895},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(235,235,235,1)","gridwidth":0.66417600664176,"zeroline":false,"anchor":"x","title":{"text":"alcohol consumption rate in liter per capita","font":{"color":"rgba(0,0,0,1)","family":"","size":14.6118721461187}},"hoverformat":".2f"},"shapes":[{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","x0":0,"x1":1,"y0":0,"y1":1}],"showlegend":true,"legend":{"bgcolor":null,"bordercolor":null,"borderwidth":0,"font":{"color":"rgba(0,0,0,1)","family":"","size":11.689497716895},"title":{"text":"colour","font":{"color":"rgba(0,0,0,1)","family":"","size":14.6118721461187}}},"hovermode":"closest","barmode":"relative"},"config":{"doubleClick":"reset","modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"source":"A","attrs":{"1631f462949f4":{"x":{},"y":{},"colour":{},"type":"scatter"}},"cur_data":"1631f462949f4","visdat":{"1631f462949f4":["function (y) ","x"]},"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.2,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+<div class="plotly html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-60fb04caf5929568ab0a" style="width:672px;height:480px;"></div>
+<script type="application/json" data-for="htmlwidget-60fb04caf5929568ab0a">{"x":{"data":[{"x":[2000,2001,2002,2003,2004,2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,2018,2019],"y":[26.19575,26.51025,26.9045,27.33025,28.084,28.43375,28.97975,29.4865,30.0245,30.3565,30.69125,30.86375,31.1335,31.70275,32.23825,32.688,33.3545,34.1095,34.8525,35.7625],"text":["Period: 2000<br />mean_doctor: 26.19575<br />colour: doctor_number","Period: 2001<br />mean_doctor: 26.51025<br />colour: doctor_number","Period: 2002<br />mean_doctor: 26.90450<br />colour: doctor_number","Period: 2003<br />mean_doctor: 27.33025<br />colour: doctor_number","Period: 2004<br />mean_doctor: 28.08400<br />colour: doctor_number","Period: 2005<br />mean_doctor: 28.43375<br />colour: doctor_number","Period: 2006<br />mean_doctor: 28.97975<br />colour: doctor_number","Period: 2007<br />mean_doctor: 29.48650<br />colour: doctor_number","Period: 2008<br />mean_doctor: 30.02450<br />colour: doctor_number","Period: 2009<br />mean_doctor: 30.35650<br />colour: doctor_number","Period: 2010<br />mean_doctor: 30.69125<br />colour: doctor_number","Period: 2011<br />mean_doctor: 30.86375<br />colour: doctor_number","Period: 2012<br />mean_doctor: 31.13350<br />colour: doctor_number","Period: 2013<br />mean_doctor: 31.70275<br />colour: doctor_number","Period: 2014<br />mean_doctor: 32.23825<br />colour: doctor_number","Period: 2015<br />mean_doctor: 32.68800<br />colour: doctor_number","Period: 2016<br />mean_doctor: 33.35450<br />colour: doctor_number","Period: 2017<br />mean_doctor: 34.10950<br />colour: doctor_number","Period: 2018<br />mean_doctor: 34.85250<br />colour: doctor_number","Period: 2019<br />mean_doctor: 35.76250<br />colour: doctor_number"],"type":"scatter","mode":"lines","line":{"width":1.88976377952756,"color":"rgba(248,118,109,1)","dash":"solid"},"hoveron":"points","name":"doctor_number","legendgroup":"doctor_number","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null}],"layout":{"margin":{"t":43.7625570776256,"r":7.30593607305936,"b":40.1826484018265,"l":37.2602739726027},"font":{"color":"rgba(0,0,0,1)","family":"","size":14.6118721461187},"title":{"text":"Figure 6: The mean doctor number for countries in each year","font":{"color":"rgba(0,0,0,1)","family":"","size":17.5342465753425},"x":0,"xref":"paper"},"xaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[1999.05,2019.95],"tickmode":"array","ticktext":["2000","2005","2010","2015"],"tickvals":[2000,2005,2010,2015],"categoryorder":"array","categoryarray":["2000","2005","2010","2015"],"nticks":null,"ticks":"","tickcolor":null,"ticklen":3.65296803652968,"tickwidth":0,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.689497716895},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(235,235,235,1)","gridwidth":0.66417600664176,"zeroline":false,"anchor":"y","title":{"text":"Year","font":{"color":"rgba(0,0,0,1)","family":"","size":14.6118721461187}},"hoverformat":".2f"},"yaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[25.7174125,36.2408375],"tickmode":"array","ticktext":["26","28","30","32","34","36"],"tickvals":[26,28,30,32,34,36],"categoryorder":"array","categoryarray":["26","28","30","32","34","36"],"nticks":null,"ticks":"","tickcolor":null,"ticklen":3.65296803652968,"tickwidth":0,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.689497716895},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(235,235,235,1)","gridwidth":0.66417600664176,"zeroline":false,"anchor":"x","title":{"text":"doctor number per 10000 people","font":{"color":"rgba(0,0,0,1)","family":"","size":14.6118721461187}},"hoverformat":".2f"},"shapes":[{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","x0":0,"x1":1,"y0":0,"y1":1}],"showlegend":true,"legend":{"bgcolor":null,"bordercolor":null,"borderwidth":0,"font":{"color":"rgba(0,0,0,1)","family":"","size":11.689497716895},"title":{"text":"colour","font":{"color":"rgba(0,0,0,1)","family":"","size":14.6118721461187}}},"hovermode":"closest","barmode":"relative"},"config":{"doubleClick":"reset","modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"source":"A","attrs":{"1631f23ef8498":{"x":{},"y":{},"colour":{},"type":"scatter"}},"cur_data":"1631f23ef8498","visdat":{"1631f23ef8498":["function (y) ","x"]},"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.2,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+<p>From the plots above, we can observe that both the mean estimate of
+rates of homicide, the mean alcohol consumption values and the average
+number of doctors in each country are fairly consistent over the years
+from 2000 to 2019. The mean estimate of rates of homicide as well as the
+mean estimate of the rate of alcohol consumption decrease over the years
+while the average number of doctors (per 10000) in each country
+increases. From this plot, we can see that the rate of homicide and rate
+of alcohol consumption might have a positive correlation, whilethe rate
+of homicide and the number of medical doctors (per 10000) might be
+negatively correlated. However, we cannot correctly judge whether
+alcohol consumption values and number of medical doctors are correlated
+with the number of homicide cases.</p>
+<p>So we zoom in in to more specific year 2000, 2009, 2016, and 2018</p>
+<p><img src="Datacollection_files/figure-html/unnamed-chunk-40-1.png" width="672" /></p>
+<p>That is why we need to focus on specific years and analyze if there
+is a trend between the number of homicide cases estimated and the number
+of medical doctors or alcohol consumption levels in different countries.
+Instead of using the mean value of the data points, we will analyze
+using individual data points collected for each country in these
+specific years.</p>
+<p>The plot A above demonstrates the relationship between the number of
+alcohol consumption per capita in each country and the number of
+homicide cases for the years 2000, 2004, 2016, 2018. From the plot, we
+can see that in all four years, the country with higher alcohol
+consumption level corresponds to a higher homicide case number estimate,
+and we can infer that the number of homicide cases is positively
+correlated with the number of alcohol consumption per capita of each
+year.</p>
+<p>The plot B above demonghstrates the relationship between the number
+of medical doctors in each country and the number of homicide cases for
+the years 2000, 2004, 2016, 2018. From the plot, we can see that in all
+four years, the country with higher number of medical doctors has a
+lower homicide rate estimate, especially in the year 2016 and 2018 there
+are steep negative relationships between the number of medical doctors
+and the homicide rate estimate. From this plot, we can infer that the
+rate of homicide is negatively correlated with the number of alcohol
+consumption per capita of each year.</p>
+<p>Both observations from the two plots align with our intuition.</p>
+<p>The second way to fit a data model in the merged data set is to first
+build a model on the estimate rate of the homicide cases. Then, after
+finding a fittable model, we can test the accuracy of the model in one
+specific country over the years from 2000 to 2019.</p>
+<pre><code>## Analysis of Variance Table
+## 
+## Model 1: Homicides_value ~ doctor_num
+## Model 2: Homicides_value ~ Alcohol_numeric + doctor_num
+##   Res.Df    RSS Df Sum of Sq      F    Pr(&gt;F)    
+## 1   1598 308510                                  
+## 2   1597 303161  1    5349.3 28.179 1.261e-07 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+<pre><code>## Alcohol_numeric      doctor_num 
+##        1.087408        1.087408</code></pre>
+<p>From the ANOVA table we find out that the F-statistic is 28.179 and
+p-value is 1.261e-07. We found out that there is a small p-value and a
+large F value, so we can adopt the model 2. Also from the code above,
+all VIF factors are 1.087 which are less than 5, so there is no
+multicollinearity. Hence we will use the full model on specific
+countries to test the model accuracy.</p>
+<pre><code>## 
+## Call:
+## lm(formula = Homicides_value ~ Alcohol_numeric + doctor_num, 
+##     data = Korea)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -0.30049 -0.08934  0.01125  0.06537  0.31713 
+## 
+## Coefficients:
+##                  Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)      2.334678   0.159508   14.64  &lt; 2e-16 ***
+## Alcohol_numeric  0.065464   0.004588   14.27  &lt; 2e-16 ***
+## doctor_num      -0.085848   0.007243  -11.85 3.67e-14 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 0.1528 on 37 degrees of freedom
+## Multiple R-squared:  0.9241, Adjusted R-squared:   0.92 
+## F-statistic: 225.4 on 2 and 37 DF,  p-value: &lt; 2.2e-16</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = Homicides_value ~ Alcohol_numeric + doctor_num, 
+##     data = spain)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -0.44959 -0.07930  0.01418  0.11683  0.40312 
+## 
+## Coefficients:
+##                 Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)      3.21171    0.37316   8.607 2.32e-10 ***
+## Alcohol_numeric  0.05716    0.00491  11.641 6.23e-14 ***
+## doctor_num      -0.08047    0.01002  -8.034 1.25e-09 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 0.2024 on 37 degrees of freedom
+## Multiple R-squared:  0.8484, Adjusted R-squared:  0.8402 
+## F-statistic: 103.5 on 2 and 37 DF,  p-value: 6.971e-16</code></pre>
+<p>From the summary of the model for country Korea, we can see the
+R-squared is 92.41% and for the country Spain, we can see that the
+R-squared is 85%, which are both very high and implies that the
+prediction accuracy would be very high.</p>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

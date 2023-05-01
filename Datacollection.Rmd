@@ -1,0 +1,542 @@
+---
+title: "JSC370 Final Project"
+author: "Zichun Xu"
+output: 
+    html_document:
+        toc: TRUE
+        toc_float: TRUE
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(warning =FALSE, message = FALSE, eval=TRUE, echo = FALSE)
+```
+
+```{r, include = FALSE}
+# install.packages("httr")
+library(httr)
+library(data.table)
+library(leaflet)
+library(tidyverse)
+library(ggplot2)
+# install.packages("ggpubr")
+library(ggpubr)
+# install.packages("broom")
+library(broom)
+library(compareGroups)
+# install.packages("readxl")
+library(readxl)
+library(car)
+```
+
+# Methods
+
+The first steps for this statistical report is to collect data that we would like to analyze and draw conclusions, then explore and clean the data collected to make sure that it fits our requirements for further analysis.
+
+```{r, eval=TRUE, include = FALSE}
+# women <- read_excel("Women_empowerment.xlsx")
+```
+
+```{r, eval=TRUE, include = FALSE}
+homicides <- read.csv("data/homicides.csv", header=TRUE)
+alcohol <- read.csv("data/WHOAlcoholTotalPerCapita.csv", header=TRUE)
+doctor <- read.csv("data/doctor.csv", header=TRUE)
+```
+
+
+# Data Collection
+
+To collect the data of rates of homicides per 100,000 population, we simply need to navigate to the Global Health Observatory site from the WHO home website, and then click on "indicators" and search for this dataset. On the WHO website for this dataset, there are also visualizations, data previews, metadata information and related indicators to give a general information of this dataset. We can directly download the dataset from WHO's website as a .csv file and then read this data into R using the tidyverse library.
+
+## 1. Homicides Data
+
+Homicides table, which is shown below, demonstrates the top 6 rows of the homicide number data which were loaded into R from the downloaded homicides.csv file from WHO's website. This dataset contains estimates of homicides rate (per 100,000 population) from 2000 to 2019, and includes estimates for male, female and both sexes total for each country around the world. This dataset contains 10980 observations each of 34 variables, including information of the location of country (Location), the time period (Period), the estimates of homicides rate (per 100,000 population) (FactValueNumeric) together with a lower bound (FactValueNumericLow) and an upper bound (FactValueNumericHigh) of this estimate., as well as the sex corresponding to each estimate (Dim1) with values "Female", "Male" or "Both sexes".
+
+```{r table 1, echo=FALSE}
+knitr::kable(head(homicides), "simple", caption = "Homicides Table")
+```
+
+## 2. Doctors Data
+The number of medical doctors dataset can be collected also from WHO's official website. After navigating to the Global Health Observatory page, we can search for the theme of Global Health Workforce statistics and directly download the number of medical doctors for each country from the year 2000 - 2021 in a .csv format from the website. Then, this .csv file is also loaded into R using the tidyverse library.
+
+Doctor table shown below contains the first 6 rows of the number of medical doctors in each country dataset which were loaded into R from the downloaded .csv file. This dataset contains estimates of each country’s number of medical doctors per 10,000 population from the year 2000 to 2019. This dataset contains 2903 observations of 34 variables, including information of the continent or region location (ParentLocation) of each estimate, the country location (Location) of each estimate, the time period (Period), the estimates of the number of medical doctors per 10,000 population (FactValueNumeric).
+
+```{r echo=FALSE}
+knitr::kable(head(doctor), "simple")
+```
+
+## 3. Alcohol Consumption Data
+The WHO's alcohol consumption dataset can be directly downloaded from HW2 as a .csv file and loaded into R using the tidyverse library. Alcohol table shown below contains the first 6 rows of the WHO alcohol consumption in each country dataset which were loaded into R from the downloaded .csv file. This dataset contains estimates of each country's alcohol consumption in liters per capita from 2000 to 2019, including the WHO Region of the country (WHO.Region), the country name (Country), the year of the estimation (Year), sex of the estimation (Sex) with values "Both sexes", "Female" or "Male, as well as the estimates of alcohol consumption in liters per capita including a low and high estimation and a string representation.
+
+```{r echo=FALSE}
+knitr::kable(head(alcohol), "simple")
+```
+
+```{r, eval=TRUE, include = FALSE}
+# table(women$dimension)
+```
+
+```{r, eval=TRUE, include = FALSE}
+# ww <- women %>% filter(indicator_name %in% c("Women with medium empowerment in the social independence domain (%)", "Women with high empowerment in the social independence domain (%)", "Women with low empowerment in the social independence domain (%)" ))
+
+# head(ww)
+```
+
+```{r, eval=TRUE, include = FALSE}
+table(homicides$Location.type)
+table(homicides$Period.type)
+str(homicides)
+```
+
+```{r, eval=TRUE, include = FALSE}
+colSums(is.na(homicides))
+```
+
+```{r, eval=TRUE, include = FALSE}
+table(doctor$Location.type)
+table(doctor$Period.type)
+str(doctor)
+colSums(is.na(doctor))
+```
+
+# Data Cleaning
+
+Firstly, I would check if there is any NA valued data in the dataset and keep only the necessary data columns needed for this project in the homicides table (Table 1), doctor table (Table 2), and alcohol table (Table 3). Since some columns contain NA values in all the rows in the doctor table and homicides table, I deleted those columns. Besides, for the convenience of reading and understanding the dataset, we need to change the column names in homicides table, doctor table and alcohol table to make them more readable.
+
+```{r, eval=TRUE, include = FALSE}
+# tidy the data and keep only necessary data column
+
+homicides <- homicides[,!names(homicides) %in% c("IndicatorCode", "Indicator", "ValueType", "ParentLocationCode", "Location.type", "SpatialDimValueCode", "Period.type", "Dim2.type", "Dim2", "Dim2ValueCode", "Dim3.type", "Dim3", "Dim3ValueCode", "DataSourceDimValueCode", "DataSource", "FactValueNumericPrefix", "FactValueUoM", "FactValueNumericLowPrefix", "FactValueNumericHighPrefix", "FactValueTranslationID", "FactComments")]
+
+doctor <- doctor[,!names(doctor) %in% c("IndicatorCode", "Indicator", "ValueType", "ParentLocationCode", "Location.type", "SpatialDimValueCode", "Period.type", "Dim1.type", "Dim1", "Dim1ValueCode", "Dim2.type", "Dim2", "Dim2ValueCode", "Dim3.type", "Dim3", "Dim3ValueCode", "DataSourceDimValueCode", "DataSource", "FactValueNumericPrefix", "FactValueUoM", "FactValueNumericLowPrefix", "FactValueNumericLow",  "FactValueNumericHighPrefix", "FactValueNumericHigh", "FactValueTranslationID", "FactComments")]
+
+```
+
+```{r,  eval=TRUE, include = FALSE}
+head(doctor)
+```
+
+```{r,  eval=TRUE, include = FALSE}
+head(homicides)
+```
+
+```{r, include = FALSE, eval=TRUE}
+table(homicides$Dim1.type)
+```
+
+```{r, eval=TRUE, include = FALSE}
+colnames(homicides)[colnames(homicides) == "Dim1"] = "Sex"
+colnames(homicides)[colnames(homicides) == "Dim1ValueCode"] = "SexCode"
+colnames(homicides)[colnames(homicides) == "FactValueNumeric"] = "AverageValue"
+colnames(homicides)[colnames(homicides) == "FactValueNumericLow"] = "LowFact"
+colnames(homicides)[colnames(homicides) == "FactValueNumericHigh"] = "HighFact"
+```
+
+```{r, eval=TRUE, include = FALSE}
+head(homicides)
+```
+
+```{r, eval=TRUE, include = FALSE}
+homicides <- homicides[,!names(homicides) %in% c("IsLatestYear", "Dim1.type", "SexCode", "Language", "DateModified")]
+head(homicides)
+```
+
+```{r, eval=TRUE, include = FALSE}
+Homicides <- homicides[!grepl('Both sexes', homicides$Sex),]
+head(Homicides)
+```
+
+```{r, eval=TRUE, include = FALSE}
+colnames(alcohol)[colnames(alcohol) == "Alcohol.total.per.capita..15...consumption.in.liters..numeric."] = "numeric"
+colnames(alcohol)[colnames(alcohol) == "Alcohol.total.per.capita..15...consumption.in.liters..low.estimation."] = "low_estimation_alcohol_per_capita"
+colnames(alcohol)[colnames(alcohol) == "Alcohol.total.per.capita..15...consumption.in.liters..high.estimation."] = "high_estimation_alcohol_per_capita"
+colnames(alcohol)[colnames(alcohol) == "Alcohol.total.per.capita..15...consumption.in.liters..string."] = "string_alcohol_per_capita"
+
+alcohol <- alcohol[!grepl('Both sexes', alcohol$Sex),]
+
+Alcohol <- alcohol[,!names(alcohol) %in% c("low_estimation_alcohol_per_capita", "high_estimation_alcohol_per_capita", "string_alcohol_per_capita")]
+
+Doctor <- doctor[,!names(doctor) %in% c("IsLatestYear", "Language", "DateModified", "Value")]
+
+Homicides <- Homicides[,!names(Homicides) %in% c("LowFact", "HighFact", "Value")]
+
+```
+
+Before merging all data, the three tables with top 6 rows are shown below:
+
+homicides table (after cleaning):
+
+```{r echo=FALSE}
+knitr::kable(head(Homicides), "simple")
+```
+
+alcohol table (after cleaning):
+
+```{r echo=FALSE}
+knitr::kable(head(Alcohol), "simple")
+```
+
+doctor table (after cleaning):
+
+```{r echo=FALSE}
+knitr::kable(head(Doctor), "simple")
+```
+
+# Data Merging
+
+Since we need to merge three tables together, we should first merge two tables and then merge the other one.
+
+Firstly, we will merge the homicides table with alcohol table first with the "Location", "Period", "Sex", "ParentLocation" columns and then merge with the medical doctors table with "Location", "Period", and "ParentLocation" columns to get the new table called "met2".
+
+Then, we need to change the column names to the corresponding names of the values.
+
+```{r, eval=TRUE, include = FALSE}
+# Merge these datasets by country name and year
+
+met1 <- merge(
+  x = Homicides,
+  y = Alcohol,
+  by.x = c("Location", "Period", "Sex", "ParentLocation"),
+  by.y = c("Country", "Year", "Sex", "WHO.Region"),
+  all.x = FALSE,
+  all.y = FALSE
+)
+
+
+met2 <- merge(
+  x = met1,
+  y = Doctor,
+  by.x = c("Location", "Period", "ParentLocation"),
+  by.y = c("Location", "Period", "ParentLocation"),
+  all.x = FALSE,
+  all.y = FALSE
+)
+head(met2)
+
+met3 <- merge(
+  x = Homicides,
+  y = Doctor,
+  by.x = c("Location", "Period", "ParentLocation"),
+  by.y = c("Location", "Period", "ParentLocation"),
+  all.x = FALSE,
+  all.y = FALSE
+)
+
+```
+
+
+```{r, eval=TRUE, include = FALSE}
+colnames(met1)[colnames(met1) == "numeric"] = "Alcohol_numeric"
+colnames(met1)[colnames(met1) == "AverageValue"] = "Homicides_value"
+colnames(met2)[colnames(met2) == "numeric"] = "Alcohol_numeric"
+colnames(met2)[colnames(met2) == "AverageValue"] = "Homicides_value"
+colnames(met2)[colnames(met2) == "FactValueNumeric"] = "doctor_num"
+
+met2 <- met2[,!names(met2) %in% c("FactValueNumeric.y", "WHO.Region.Code", "Country.Code")]
+
+```
+After merging, the merge table reduced the number of countries and years, and we found out that some countries' data is not complete from 2000 to 2019 so we removed these countries and only kept those that have complete data from 2000 to 2019. The resulting data has only 40 countries from different continents left, and is called met_40.
+```{r, eval=TRUE, include = FALSE}
+met <- met2 %>% group_by(Location) %>% summarise(total_count=n())
+met <- subset(met,total_count==40 )
+
+met_40 <- merge(
+  x = met[1],
+  y = met2,
+  by.x = c("Location"),
+  by.y = c("Location"),
+  how="inner"
+)
+met_40
+```
+
+
+```{r echo=FALSE}
+knitr::kable(head(met_40), "simple")
+```
+
+We found out that some of the Asian countries such as China and Korea were mislabeled to Western Pacific by the WHO, so we manually changed their continent label.
+
+
+```{r}
+wp <-met_40[met_40$ParentLocation == "Western Pacific", ]
+```
+
+```{r}
+met_40$ParentLocation[met_40$Location == "China"] <- "Asia"
+met_40$ParentLocation[met_40$Location == "Republic of Korea"] <- "Asia"
+```
+After we performed the above cleaning step, there are Asian countries present in the dataset. 
+
+From the table below, we can see that there are six continents/regions with 40 countries in the merged dataset met_40. Europe has the most number of countries (29) and most of the other parent locations have 2-3 countries. 
+
+```{r, eval=TRUE, include = FALSE}
+# Group by ParentLocation
+country_met <- met_40 %>% group_by(ParentLocation) %>% 
+  summarise(Total_Countries =n_distinct(Location))
+```
+
+```{r echo=FALSE}
+knitr::kable(country_met, "simple")
+```
+
+# Data Exploration
+
+After the data is cleaned and merged together, we can start to explore the data and plot the histogram for variables of interest and important values. The three histograms below demonstrate the values of the three important variables that we would like to use. 
+
+The first histogram shows the frequency distribution of the estimate of rate of homicides (per 100,000 population) by different categories of sexes over all countries in every year from 2000 to 2019. 
+
+##### Figure 1:
+```{r echo=FALSE, eval=TRUE, message=FALSE}
+library(gganimate)
+Homicides_mf<- met_40 %>% 
+  ggplot(aes(x = Homicides_value))+
+  geom_histogram(aes(fill=Sex), bins = 100) +
+  scale_fill_viridis_d(direction = -1) +
+  theme_classic() +
+  scale_fill_manual(values=c("#56B4E9", "#E69FF9")) +
+  
+  labs(
+    title = "The Homicides Value in different countries",
+    subtitle = 'Year: {frame_time}',
+    x = "Estimates of rates of homicides per 100000", y = "Number of Countries", 
+    fill = "Sex"
+  ) +
+  transition_time(as.integer(Period))+
+  ease_aes('cubic-in-out')
+animate(Homicides_mf)
+```
+
+This animated histogram shows the homicides value in different countries in each year. In this animated histogram, there is a consistent right tail, and as the rates of homicides increase, the number of countries having the female homicides rate equal to this rate decreases, and most countries have the estimated rates of homicide in range [0, 5]. The minimum homicides rate value estimate in the met_40 is 0.003. Since the rate of homicides in some counties is too small and very close to zero, the histogram counts many countries in bin close to zero, but these are not the absolute zero values.
+
+The second histogram shows the frequency of the total alcohol assumption in liters per captia by different sexes over all countries in each year from 2000 to 2019.
+
+##### Figure 2:
+```{r echo=FALSE, eval=TRUE, message=FALSE}
+library(gganimate)
+Alcohol_mf <- met_40 %>% 
+  ggplot(aes(x = Alcohol_numeric))+
+  geom_histogram(aes(fill=Sex)) +
+  scale_fill_viridis_d(direction = -1) +
+  theme_classic() +
+  scale_fill_manual(values=c("#56B4E9", "#E69FF9")) +
+  
+  labs(
+    title = "The Alcohol consumption per capita (liters) in different countries",
+    subtitle = 'Year: {frame_time}',
+    x = "Alcohol total per capita consumption in liters", y = "Number of Countries", 
+    fill = "Sex"
+  ) +
+  transition_time(as.integer(Period))+
+  ease_aes('cubic-in-out')
+animate(Alcohol_mf)
+```
+
+From the above animated histogram, the estimate of alcohol consumption of females in each year is more concentrately distributed, and the estimate of alcohol consumption of male in each year is more spread out. The number of countries with estimate female alcohol consumption in range [0, 10] is higher than that of male alcohol consumption. However, in the range beyond 10 liters per capita, there are more countries with estimated male alcohol consumption equal to this rate compared with estimated female alcohol consumption.
+
+The third histogram show the Medical doctors (per 10000 population) over all countries in each year from 2000 to 2019.
+
+##### Figure 3:
+```{r echo=FALSE, eval=TRUE, message=FALSE}
+library(gganimate)
+doctor_mf <- met_40 %>% 
+  ggplot(aes(x = doctor_num))+
+  geom_histogram(aes(fill=Sex)) +
+  scale_fill_viridis_d(direction = -1) +
+  theme_classic() +
+  scale_fill_manual(values=c("#56B4E9", "#E69FF9")) +
+  
+  labs(
+    title = "Medical doctors in different countries",
+    subtitle = 'Year: {frame_time}',
+    x = "Medical doctors (per 10000 population)", y = "Number of Countries", 
+    fill = "Sex"
+  ) +
+  transition_time(as.integer(Period))+
+  ease_aes('cubic-in-out')
+animate(doctor_mf)
+```
+
+```{r echo=FALSE, warning = FALSE, message = FALSE, error = FALSE}
+
+ggplot(data=met_40, aes(x=doctor_num)) + 
+  geom_histogram(fill="plum", color="black") + 
+  theme_minimal() +
+  labs(y = "count ", x = "Medical doctors (per 10000 population)")
+
+```
+
+
+Form the above histogram, the plot of the medical doctors(per 10000 population) is symmetric and unimodal. Majority of the countries have 20-40 medical doctors per 10000 population and very few countries have less than 10 or more than 50 medical doctors per 10000 population.
+
+
+# Preliminary Results
+
+The key question that we are interested in is if there is a correlation between the rate of homicide and the number of medical doctors together with alcohol consumption level in each country from 2000 - 2019.
+
+We can analyze the data in two ways. Firstly, we can compare all data points collected in the same year for different countries around the globe. This analysis can help us understand whether homicide rates is correlated with the number of medical doctors in the same year in various countries.
+
+```{r, eval=TRUE, include = FALSE}
+# Group by Year
+Year_met <- met_40 %>% group_by(Period) %>% 
+  summarise(mean_homicides = mean(Homicides_value),
+            sd_homicides = sd(Homicides_value),
+            mean_alcohol = mean(Alcohol_numeric),
+            sd_alcohol = sd(Alcohol_numeric),
+            mean_doctor = mean(doctor_num),
+            sd_doctor = sd(doctor_num))
+Year_met
+```
+
+
+
+The table below summarizes the mean and standard devication of the estimates of homicide cases, alcohol consumption, and the number of medical doctors across all countries in each year. We will use the mean values of estimates of homicide cases, alcohol consumption, and the number of medical doctors across all countries to understand the relationship between these three variables. 
+
+```{r echo=FALSE}
+knitr::kable(Year_met, "simple")
+```
+The plot below contains information of the change of the mean estimate of homicide cases, mean alcohol consumption and mean number of medical doctors over all countries from year 2000 to 2019. 
+```{r, echo=FALSE, message=FALSE}
+library(plotly)
+mean_homicide <- Year_met %>% 
+  ggplot(aes(x = Period, y = mean_homicides)) +
+  geom_line(aes(color = "homicides_rate")) +
+  theme_minimal() +
+  labs(title = "Figure 4: The mean homicide for countries in each year", 
+       x = "Year", y = "homicides rate per 10000 people")
+ggplotly(mean_homicide)
+```
+
+```{r, echo=FALSE, message=FALSE}
+library(plotly)
+mean_alcohol <- Year_met %>% 
+  ggplot(aes(x = Period, y = mean_alcohol)) +
+  geom_line(aes(color = "alcohol_rate")) +
+  theme_minimal() +
+  labs(title = "Figure 5: The alcohol consumption rate for countries in each year", 
+       x = "Year", y = "alcohol consumption rate in liter per capita")
+ggplotly(mean_alcohol)
+```
+
+```{r, echo=FALSE, message=FALSE}
+library(plotly)
+mean_doctor <- Year_met %>% 
+  ggplot(aes(x = Period, y = mean_doctor)) +
+  geom_line(aes(color = "doctor_number")) +
+  theme_minimal() +
+  labs(title = "Figure 6: The mean doctor number for countries in each year", 
+       x = "Year", y = "doctor number per 10000 people")
+ggplotly(mean_doctor)
+```
+
+
+From the plots above, we can observe that both the mean estimate of rates of homicide, the mean alcohol consumption values and the average number of doctors in each country are fairly consistent over the years from 2000 to 2019. The mean estimate of rates of homicide as well as the mean estimate of the rate of alcohol consumption decrease over the years while the average number of doctors (per 10000) in each country increases. From this plot, we can see that the rate of homicide and rate of alcohol consumption might have a positive correlation, whilethe rate of homicide and the number of medical doctors (per 10000) might be negatively correlated. However, we cannot correctly judge whether alcohol consumption values and number of medical doctors are correlated with the number of homicide cases.
+
+So we zoom in in to more specific year 2000, 2009, 2016, and 2018 
+
+```{r echo=FALSE, warning = FALSE, message = FALSE, error = FALSE}
+
+hh <- met_40 %>% filter(Period == 2018 | Period == 2000 | Period == 2004 |Period == 2016 )
+
+par(family = 'serif', mfrow = c(1,2))
+a <- ggplot(data = hh, aes(x=Alcohol_numeric, y=Homicides_value, color=factor(Period), shape=factor(Period))) +
+  ylim(0, 5) +
+  geom_point() + 
+  geom_smooth(method=lm, formula = y ~  x, se=FALSE, fullrange=TRUE) +
+  ylab("homicide number") + xlab("Alcohol.total.per.capita") 
+
+b <- ggplot(data = hh, aes(x=Homicides_value, y=doctor_num, color=factor(Period), shape=factor(Period))) +
+  ylim(-10, 20) +
+  geom_point() + 
+  geom_smooth(method=lm, formula = y ~  x, se=FALSE, fullrange=TRUE) +
+  ylab("homicide number") + xlab("Doctor number")
+
+c <- hh %>%
+  ggplot(mapping = aes(
+    x = Homicides_value,
+    y = doctor_num, color = factor(Period))) +
+  stat_smooth(method = lm, formula = y ~ x, se = FALSE) +
+  geom_jitter(alpha = .5) + 
+  facet_wrap(~factor(Period)) +
+  labs(title = "homicide number",
+    x = "Doctor number"
+    ) 
+
+ggarrange(a, b, labels = c("A", "B"),
+                    ncol = 1, nrow = 2)
+```
+
+
+That is why we need to focus on specific years and analyze if there is a trend between the number of homicide cases estimated and the number of medical doctors or alcohol consumption levels in different countries. Instead of using the mean value of the data points, we will analyze using individual data points collected for each country in these specific years.
+
+The plot A above demonstrates the relationship between the number of alcohol consumption per capita in each country and the number of homicide cases for the years 2000, 2004, 2016, 2018. From the plot, we can see that in all four years, the country with higher alcohol consumption level corresponds to a higher homicide case number estimate, and we can infer that the number of homicide cases is positively correlated with the number of alcohol consumption per capita of each year. 
+
+The plot B above demonghstrates the relationship between the number of medical doctors in each country and the number of homicide cases for the years 2000, 2004, 2016, 2018. From the plot, we can see that in all four years, the country with higher number of medical doctors has a lower homicide rate estimate, especially in the year 2016 and 2018 there are steep negative relationships between the number of medical doctors and the homicide rate estimate. From this plot, we can infer that the rate of homicide is negatively correlated with the number of alcohol consumption per capita of each year.
+
+Both observations from the two plots align with our intuition.
+
+The second way to fit a data model in the merged data set is to first build a model on the estimate rate of the homicide cases. Then, after finding a fittable model, we can test the accuracy of the model in one specific country over the years from 2000 to 2019.
+
+```{r, eval=TRUE, include = FALSE}
+fullmodel <- lm(Homicides_value ~ Alcohol_numeric + doctor_num, data=met_40)
+summary(fullmodel)
+anova(fullmodel)
+vif(fullmodel)
+```
+
+
+
+
+```{r, eval=TRUE, include = FALSE}
+model <- lm(Homicides_value ~ doctor_num , data=met_40)
+summary(model)
+anova(model)
+```
+
+
+```{r echo=FALSE}
+anova(model, fullmodel)
+vif(fullmodel)
+```
+
+
+From the ANOVA table we find out that the F-statistic is 28.179 and p-value is 1.261e-07. We found out that there is a small p-value and a large F value, so we can adopt the model 2. Also from the code above, all VIF factors are 1.087 which are less than 5, so there is no multicollinearity. Hence we will use the full model on specific countries to test the model accuracy.
+
+
+```{r, eval=TRUE, include = FALSE}
+Korea <- met_40 %>% filter(Location == "Republic of Korea")
+Korea_model <- lm(Homicides_value ~ Alcohol_numeric + doctor_num, data=Korea)
+
+
+spain <- met_40 %>% filter(Location == "Spain")
+spain_model <- lm(Homicides_value ~ Alcohol_numeric + doctor_num, data=spain)
+
+# Mexico <- met2 %>% filter(Location == "Mexico")
+# Mexico_model <- lm(Homicides_value ~ Alcohol_numeric + doctor_num, data=Mexico)
+
+```
+
+
+```{r echo=FALSE}
+summary(Korea_model)
+summary(spain_model)
+# summary(Mexico_model)
+```
+
+From the summary of the model for country Korea, we can see the R-squared is 92.41% and for the country Spain, we can see that the R-squared is 85%, which are both very high and implies that the prediction accuracy would be very high. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
