@@ -356,14 +356,6 @@ doctor_mf <- met_40 %>%
 animate(doctor_mf)
 ```
 
-```{r echo=FALSE, warning = FALSE, message = FALSE, error = FALSE}
-
-ggplot(data=met_40, aes(x=doctor_num)) + 
-  geom_histogram(fill="plum", color="black") + 
-  theme_minimal() +
-  labs(y = "count ", x = "Medical doctors (per 10000 population)")
-
-```
 
 
 Form the above histogram, the plot of the medical doctors(per 10000 population) is symmetric and unimodal. Majority of the countries have 20-40 medical doctors per 10000 population and very few countries have less than 10 or more than 50 medical doctors per 10000 population.
