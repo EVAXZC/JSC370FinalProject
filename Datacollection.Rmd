@@ -285,7 +285,6 @@ After the data is cleaned and merged together, we can start to explore the data 
 
 The first histogram shows the frequency distribution of the estimate of rate of homicides (per 100,000 population) by different categories of sexes over all countries in every year from 2000 to 2019. 
 
-##### Figure 1:
 ```{r echo=FALSE, eval=TRUE, message=FALSE}
 library(gganimate)
 Homicides_mf<- met_40 %>% 
@@ -296,7 +295,7 @@ Homicides_mf<- met_40 %>%
   scale_fill_manual(values=c("#56B4E9", "#E69FF9")) +
   
   labs(
-    title = "The Homicides Value in different countries",
+    title = "Figure 1: The Homicides Value in different countries",
     subtitle = 'Year: {frame_time}',
     x = "Estimates of rates of homicides per 100000", y = "Number of Countries", 
     fill = "Sex"
@@ -306,11 +305,13 @@ Homicides_mf<- met_40 %>%
 animate(Homicides_mf)
 ```
 
+<br/>
+
+
 This animated histogram shows the homicides value in different countries in each year. In this animated histogram, there is a consistent right tail, and as the rates of homicides increase, the number of countries having the female homicides rate equal to this rate decreases, and most countries have the estimated rates of homicide in range [0, 5]. The minimum homicides rate value estimate in the met_40 is 0.003. Since the rate of homicides in some counties is too small and very close to zero, the histogram counts many countries in bin close to zero, but these are not the absolute zero values.
 
 The second histogram shows the frequency of the total alcohol assumption in liters per captia by different sexes over all countries in each year from 2000 to 2019.
 
-##### Figure 2:
 ```{r echo=FALSE, eval=TRUE, message=FALSE}
 library(gganimate)
 Alcohol_mf <- met_40 %>% 
@@ -321,21 +322,25 @@ Alcohol_mf <- met_40 %>%
   scale_fill_manual(values=c("#56B4E9", "#E69FF9")) +
   
   labs(
-    title = "The Alcohol consumption per capita (liters) in different countries",
+    title = "Figure 2: The Alcohol consumption per capita (liters) in different countries",
     subtitle = 'Year: {frame_time}',
     x = "Alcohol total per capita consumption in liters", y = "Number of Countries", 
     fill = "Sex"
   ) +
   transition_time(as.integer(Period))+
   ease_aes('cubic-in-out')
+
 animate(Alcohol_mf)
 ```
+
+<br/>
+
 
 From the above animated histogram, the estimate of alcohol consumption of females in each year is more concentrately distributed, and the estimate of alcohol consumption of male in each year is more spread out. The number of countries with estimate female alcohol consumption in range [0, 10] is higher than that of male alcohol consumption. However, in the range beyond 10 liters per capita, there are more countries with estimated male alcohol consumption equal to this rate compared with estimated female alcohol consumption.
 
 The third histogram show the Medical doctors (per 10000 population) over all countries in each year from 2000 to 2019.
 
-##### Figure 3:
+
 ```{r echo=FALSE, eval=TRUE, message=FALSE}
 library(gganimate)
 doctor_mf <- met_40 %>% 
@@ -346,7 +351,7 @@ doctor_mf <- met_40 %>%
   scale_fill_manual(values=c("#56B4E9", "#E69FF9")) +
   
   labs(
-    title = "Medical doctors in different countries",
+    title = "Figure 3: Medical doctors in different countries",
     subtitle = 'Year: {frame_time}',
     x = "Medical doctors (per 10000 population)", y = "Number of Countries", 
     fill = "Sex"
@@ -355,6 +360,9 @@ doctor_mf <- met_40 %>%
   ease_aes('cubic-in-out')
 animate(doctor_mf)
 ```
+
+<br/>
+
 
 
 
@@ -386,7 +394,10 @@ The table below summarizes the mean and standard devication of the estimates of 
 ```{r echo=FALSE}
 knitr::kable(Year_met, "simple")
 ```
-The plot below contains information of the change of the mean estimate of homicide cases, mean alcohol consumption and mean number of medical doctors over all countries from year 2000 to 2019. 
+The plot below contains information of the change of the mean estimate of homicide cases, mean alcohol consumption and mean number of medical doctors over all countries from year 2000 to 2019.
+
+#### The three data changed in each year{.tabset}
+##### Figure 3: Homicides Rate
 ```{r, echo=FALSE, message=FALSE}
 library(plotly)
 mean_homicide <- Year_met %>% 
@@ -398,6 +409,7 @@ mean_homicide <- Year_met %>%
 ggplotly(mean_homicide)
 ```
 
+##### Figure 4: Alcohol Rate
 ```{r, echo=FALSE, message=FALSE}
 library(plotly)
 mean_alcohol <- Year_met %>% 
@@ -409,6 +421,7 @@ mean_alcohol <- Year_met %>%
 ggplotly(mean_alcohol)
 ```
 
+##### Figure 5: Doctor number
 ```{r, echo=FALSE, message=FALSE}
 library(plotly)
 mean_doctor <- Year_met %>% 
@@ -419,7 +432,7 @@ mean_doctor <- Year_met %>%
        x = "Year", y = "doctor number per 10000 people")
 ggplotly(mean_doctor)
 ```
-
+#### {-}
 
 From the plots above, we can observe that both the mean estimate of rates of homicide, the mean alcohol consumption values and the average number of doctors in each country are fairly consistent over the years from 2000 to 2019. The mean estimate of rates of homicide as well as the mean estimate of the rate of alcohol consumption decrease over the years while the average number of doctors (per 10000) in each country increases. From this plot, we can see that the rate of homicide and rate of alcohol consumption might have a positive correlation, whilethe rate of homicide and the number of medical doctors (per 10000) might be negatively correlated. However, we cannot correctly judge whether alcohol consumption values and number of medical doctors are correlated with the number of homicide cases.
 
